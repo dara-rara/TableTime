@@ -39,16 +39,13 @@ public class AuthController {
         return ResponseEntity.ok(authService.signUp(request));
     }
 
-
     @PostMapping("/login")
     public ResponseEntity<?> signIn(@Valid @RequestBody LoginUser request) {
         return ResponseEntity.ok(authService.signIn(request));
     }
 
-
     @GetMapping("/status")
     public ResponseEntity<?> getStatus(@AuthenticationPrincipal UserEntity user) {
         return ResponseEntity.ok(new StatusResponse(user.getRole()));
     }
-
 }

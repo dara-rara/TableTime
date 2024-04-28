@@ -9,5 +9,4 @@ import lombok.*;
 public class JwtAuthenticationResponse {
     private final String token;
     private final Role role;
-
 }

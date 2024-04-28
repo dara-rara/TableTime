@@ -23,6 +23,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     public static final String BEARER_PREFIX = "Bearer ";
+    public static final String NULL_TOKEN = "Bearer null";
     public static final String HEADER_NAME = "Authorization";
     private final JwtService jwtService;
     private final UserService userService;
@@ -36,7 +37,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // Получаем токен из заголовка
         var authHeader = request.getHeader(HEADER_NAME);
-        if (StringUtils.isEmpty(authHeader) || !StringUtils.startsWith(authHeader, BEARER_PREFIX)) {
+        if (StringUtils.isEmpty(authHeader) || StringUtils.startsWith(authHeader, NULL_TOKEN)
+                || !StringUtils.startsWith(authHeader, BEARER_PREFIX) ) {
             filterChain.doFilter(request, response);
             return;
         }

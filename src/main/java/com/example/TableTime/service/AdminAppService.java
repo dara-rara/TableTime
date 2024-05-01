@@ -27,7 +27,7 @@ public class AdminAppService {
     private final TownRepository townRepository;
     public UserEntity getUser (String email) {
         var user = userRepository.findByEmail(email);
-        if (user == null) {
+        if (user.isEmpty()) {
             throw new UsernameNotFoundException("Пользователь не найден");
         }
         return user.get();

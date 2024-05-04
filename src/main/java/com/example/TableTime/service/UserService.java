@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class UserService implements UserDetailsService{
+
     private  final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -43,6 +44,12 @@ public class UserService implements UserDetailsService{
     public UserEntity getByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+    }
+
+    public UserEntity getUser (String email) {
+        var user = userRepository.findByEmail(email);
+        if (user.isEmpty()) throw new UsernameNotFoundException("Пользователь не найден");
+        return user.get();
     }
 
     @Override

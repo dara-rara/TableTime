@@ -2,9 +2,9 @@ package com.example.TableTime.adapter.web.adminApp;
 
 import com.example.TableTime.adapter.web.adminApp.dto.RoleList;
 import com.example.TableTime.adapter.web.adminApp.dto.UserRequest;
-import com.example.TableTime.domain.restaurant.RestaurantEntity;
 import com.example.TableTime.domain.user.Role;
 import com.example.TableTime.service.AdminAppService;
+import com.example.TableTime.service.RestaurantService;
 import com.example.TableTime.service.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -24,25 +24,19 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 public class AdminAppController {
     private final AdminAppService adminAppService;
     private final UserService userService;
+    private final RestaurantService restaurantService;
 
 
     @PostMapping("/createRestaurant")
-    public RestaurantEntity createRestaurant(@RequestBody UserRequest userRequest) {
-        return adminAppService
-                .createRestaurant(adminAppService
-                        .changeRole(adminAppService
-                                .getUser(userRequest.email()), Role.ADMIN_REST));
+    public void createRestaurant(@RequestBody UserRequest userRequest) {
+        restaurantService.createRestaurant(adminAppService
+                .changeRole(userService
+                        .getUser(userRequest.email()), Role.ADMIN_REST));
     }
-
 
     @GetMapping("/getRoles")
     public RoleList getRoles() {
         return adminAppService.getRole();
-    }
-
-    @PostMapping("/getRestaurant")
-    public RestaurantEntity getRestaurant (@RequestBody String username) {
-        return adminAppService.getRestaurant(userService.getByUsername(username));
     }
 
 }

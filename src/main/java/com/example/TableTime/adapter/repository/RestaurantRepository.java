@@ -10,4 +10,5 @@ import java.util.Optional;
 @Repository
 public interface RestaurantRepository extends JpaRepository<RestaurantEntity,Long> {
     Optional<RestaurantEntity> findByUser (UserEntity userEntity);
+    boolean existsByUser (UserEntity user);
 }

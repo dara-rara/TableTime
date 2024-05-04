@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.FieldNameConstants;
+import java.time.LocalTime;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -26,7 +27,7 @@ public class RestaurantEntity {
     private String name;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_town", nullable = true)
+    @JoinColumn(name = "id_town", nullable = false)
     private TownEntity town;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -37,14 +38,17 @@ public class RestaurantEntity {
     private String address;
 
     @Column(name = "opening", nullable = false)
-    private String opening;
+    private LocalTime opening;
 
     @Column(name = "ending", nullable = false)
-    private String ending;
+    private LocalTime ending;
 
     @Column(name = "phone", nullable = false)
     private String phone;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", nullable = false, length = 4000)
     private String description;
+
+    @Column(name = "tables", nullable = false)
+    private Integer tables;
 }

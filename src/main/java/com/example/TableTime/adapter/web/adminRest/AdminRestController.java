@@ -31,9 +31,10 @@ public class AdminRestController {
     }
 
     @PostMapping("/updateRestaurant")
-    public void updateRestaurant(@AuthenticationPrincipal UserEntity user,
+    public RestaurantInfo updateRestaurant(@AuthenticationPrincipal UserEntity user,
                                  @RequestBody RestaurantInfo form) {
         adminRestService.updateRestaurant(user, form);
+        return form;
     }
 
     @PostMapping("/updateMenu")

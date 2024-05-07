@@ -4,7 +4,9 @@ import com.example.TableTime.adapter.web.auth.dto.LoginUser;
 import com.example.TableTime.adapter.web.auth.dto.RegistrationRequest;
 import com.example.TableTime.adapter.web.auth.dto.JwtAuthenticationResponse;
 import com.example.TableTime.config.jwt.JwtService;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class AuthService {
 
     private final UserService userService;

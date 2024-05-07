@@ -30,7 +30,7 @@ public class RestaurantEntity {
     @JoinColumn(name = "id_town", nullable = false)
     private TownEntity town;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_user")
     private UserEntity user;
 

@@ -1,8 +1,8 @@
-package com.example.TableTime.adapter.web.restaurant.dto;
+package com.example.TableTime.adapter.web.adminRest.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record RestaurantForm(@NotBlank
+public record RestaurantInfo(@NotBlank
                              String name,
                              @NotBlank
                              String town,

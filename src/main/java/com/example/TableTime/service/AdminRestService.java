@@ -109,9 +109,9 @@ public class AdminRestService {
         //photos.setContentTypeOne(photo1.getContentType());
         photos.setPhotoOne(Base64.getDecoder().decode(photo1));
         //photos.setContentTypeTwo(photo2.getContentType());
-        photos.setPhotoTwo(Base64.getDecoder().decode(photo1));
+        photos.setPhotoTwo(Base64.getDecoder().decode(photo2));
         //photos.setContentTypeThree(photo3.getContentType());
-        photos.setPhotoThree(Base64.getDecoder().decode(photo1));
+        photos.setPhotoThree(Base64.getDecoder().decode(photo3));
         photoRestaurantRepository.save(photos);
     }
 

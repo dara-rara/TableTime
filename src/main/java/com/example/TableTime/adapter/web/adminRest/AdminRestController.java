@@ -1,5 +1,7 @@
 package com.example.TableTime.adapter.web.adminRest;
 
+import com.example.TableTime.adapter.web.adminRest.dto.PhotoMenuOrPlan;
+import com.example.TableTime.adapter.web.adminRest.dto.PhotoRest;
 import com.example.TableTime.adapter.web.adminRest.dto.RestaurantData;
 import com.example.TableTime.adapter.web.adminRest.dto.RestaurantInfo;
 import com.example.TableTime.domain.user.UserEntity;
@@ -32,44 +34,24 @@ public class AdminRestController {
 
     @PostMapping("/updateRestaurant")
     public RestaurantInfo updateRestaurant(@AuthenticationPrincipal UserEntity user,
-                                 @RequestBody RestaurantInfo form) {
+                                           @RequestBody RestaurantInfo form) {
         adminRestService.updateRestaurant(user, form);
         return form;
     }
 
     @PostMapping("/updateMenu")
-    public ResponseEntity updateMenu(@AuthenticationPrincipal UserEntity user,
-                                     @RequestParam("menu") MultipartFile menu) {
-        try {
-            adminRestService.updateMenu(user, menu);
-            return ResponseEntity.status(HttpStatus.OK).build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    public void updateMenu(@AuthenticationPrincipal UserEntity user, @RequestBody PhotoMenuOrPlan photo) {
+        adminRestService.updateMenu(user, photo.photo());
     }
 
     @PostMapping("/updatePlan")
-    public ResponseEntity updatePlan(@AuthenticationPrincipal UserEntity user,
-                                     @RequestParam("plan") MultipartFile plan) {
-        try {
-            adminRestService.updatePlan(user, plan);
-            return ResponseEntity.status(HttpStatus.OK).build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    public void updatePlan(@AuthenticationPrincipal UserEntity user, @RequestBody PhotoMenuOrPlan photo) {
+        adminRestService.updateMenu(user, photo.photo());
     }
 
     @PostMapping("/updatePhotoRestaurant")
-    public ResponseEntity updatePhotoRest(@AuthenticationPrincipal UserEntity user,
-                                          @RequestParam("photo1") MultipartFile photo1,
-                                          @RequestParam("photo2") MultipartFile photo2,
-                                          @RequestParam("photo3") MultipartFile photo3) {
-        try {
-            adminRestService.updatePhotoRest(user, photo1, photo2, photo3);
-            return ResponseEntity.status(HttpStatus.OK).build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    public void updatePhotoRest(@AuthenticationPrincipal UserEntity user, @RequestBody PhotoRest photo) {
+        adminRestService.updatePhotoRest(user, photo.photo1(), photo.photo2(), photo.photo3());
     }
 //    @PostMapping("/updateMenu")
 //    public ResponseEntity updateMenu(@AuthenticationPrincipal UserEntity user,

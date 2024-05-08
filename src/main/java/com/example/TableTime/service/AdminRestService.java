@@ -103,31 +103,56 @@ public class AdminRestService {
         return data;
     }
 
-    public void updatePhotoRest(UserEntity user, MultipartFile photo1, MultipartFile photo2,
-                                MultipartFile photo3) throws IOException {
+    public void updatePhotoRest(UserEntity user, String photo1, String photo2,
+                                String photo3) {
         var photos = getPhotoRest(user);
-        photos.setContentTypeOne(photo1.getContentType());
-        photos.setPhotoOne(photo1.getBytes());
-        photos.setContentTypeTwo(photo2.getContentType());
-        photos.setPhotoTwo(photo2.getBytes());
-        photos.setContentTypeThree(photo3.getContentType());
-        photos.setPhotoThree(photo3.getBytes());
+        //photos.setContentTypeOne(photo1.getContentType());
+        photos.setPhotoOne(Base64.getDecoder().decode(photo1));
+        //photos.setContentTypeTwo(photo2.getContentType());
+        photos.setPhotoTwo(Base64.getDecoder().decode(photo1));
+        //photos.setContentTypeThree(photo3.getContentType());
+        photos.setPhotoThree(Base64.getDecoder().decode(photo1));
         photoRestaurantRepository.save(photos);
     }
 
-    public void updatePlan(UserEntity user, MultipartFile photo) throws IOException {
+    public void updatePlan(UserEntity user, String photo) {
         var plan = getPlan(user);
-        plan.setContentType(photo.getContentType());
-        plan.setPhoto(photo.getBytes());
+        //plan.setContentType(photo.getContentType());
+        plan.setPhoto(Base64.getDecoder().decode(photo));
         photoPlanRepository.save(plan);
     }
-    
-    public void updateMenu(UserEntity user, MultipartFile photo) throws IOException {
+
+    public void updateMenu(UserEntity user, String photo) {
         var menu = getMenu(user);
-        menu.setContentType(photo.getContentType());
-        menu.setPhoto(photo.getBytes());
+        //menu.setContentType(photo.getContentType());
+        menu.setPhoto(Base64.getDecoder().decode(photo));
         photoMenuRepository.save(menu);
     }
+//    public void updatePhotoRest(UserEntity user, MultipartFile photo1, MultipartFile photo2,
+//                                MultipartFile photo3) throws IOException {
+//        var photos = getPhotoRest(user);
+//        photos.setContentTypeOne(photo1.getContentType());
+//        photos.setPhotoOne(photo1.getBytes());
+//        photos.setContentTypeTwo(photo2.getContentType());
+//        photos.setPhotoTwo(photo2.getBytes());
+//        photos.setContentTypeThree(photo3.getContentType());
+//        photos.setPhotoThree(photo3.getBytes());
+//        photoRestaurantRepository.save(photos);
+//    }
+//
+//    public void updatePlan(UserEntity user, MultipartFile photo) throws IOException {
+//        var plan = getPlan(user);
+//        plan.setContentType(photo.getContentType());
+//        plan.setPhoto(photo.getBytes());
+//        photoPlanRepository.save(plan);
+//    }
+//
+//    public void updateMenu(UserEntity user, MultipartFile photo) throws IOException {
+//        var menu = getMenu(user);
+//        menu.setContentType(photo.getContentType());
+//        menu.setPhoto(photo.getBytes());
+//        photoMenuRepository.save(menu);
+//    }
     
     public void updateRestaurant(UserEntity user, RestaurantInfo form) {
         existTown(form.town());

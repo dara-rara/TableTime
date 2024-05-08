@@ -46,7 +46,7 @@ public class AdminRestController {
 
     @PostMapping("/updatePlan")
     public void updatePlan(@AuthenticationPrincipal UserEntity user, @RequestBody PhotoMenuOrPlan photo) {
-        adminRestService.updateMenu(user, photo.photo());
+        adminRestService.updatePlan(user, photo.photo());
     }
 
     @PostMapping("/updatePhotoRestaurant")

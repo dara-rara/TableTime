@@ -67,16 +67,16 @@ public class AdminRestService {
         var photo1 = photos.getPhotoOne() != null
                 ? Base64.getEncoder().encodeToString(photos.getPhotoOne())
                 : null;
-        var photo2 = photos.getPhotoOne() != null
+        var photo2 = photos.getPhotoTwo() != null
                 ? Base64.getEncoder().encodeToString(photos.getPhotoTwo())
                 : null;
-        var photo3 = photos.getPhotoOne() != null
+        var photo3 = photos.getPhotoThree() != null
                 ? Base64.getEncoder().encodeToString(photos.getPhotoThree())
                 : null;
-        var planBase64 = photos.getPhotoOne() != null
+        var planBase64 = plan.getPhoto() != null
                 ? Base64.getEncoder().encodeToString(plan.getPhoto())
                 : null;
-        var menuBase64 = photos.getPhotoOne() != null
+        var menuBase64 = menu.getPhoto() != null
                 ? Base64.getEncoder().encodeToString(menu.getPhoto())
                 : null;
         photosBase64.add(photo1);

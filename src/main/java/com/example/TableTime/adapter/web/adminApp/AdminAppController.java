@@ -30,9 +30,9 @@ public class AdminAppController {
     private final AdminRestService restaurantService;
 
     @PostMapping("/createRestaurant")
-    public ResponseEntity createRestaurant(UserRequest user) {
+    public ResponseEntity createRestaurant(@RequestBody UserRequest user) {
         restaurantService.createRestaurant(adminAppService.changeRole(userService
-                                .getUser(user.email()), Role.ADMIN_REST), user.photo());
+                                .getUser(user.email()), Role.ADMIN_REST));
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }

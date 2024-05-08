@@ -64,11 +64,29 @@ public class AdminRestService {
         var ending = restaurant.getEnding().format(formatter);
 
         List<String> photosBase64 = new ArrayList<>();
-        photosBase64.add(Base64.getEncoder().encodeToString(photos.getPhotoOne()));
-        photosBase64.add(Base64.getEncoder().encodeToString(photos.getPhotoTwo()));
-        photosBase64.add(Base64.getEncoder().encodeToString(photos.getPhotoThree()));
-        var planBase64 = Base64.getEncoder().encodeToString(plan.getPhoto());
-        var menuBase64 = Base64.getEncoder().encodeToString(menu.getPhoto());
+        var photo1 = photos.getPhotoOne() != null
+                ? Base64.getEncoder().encodeToString(photos.getPhotoOne())
+                : null;
+        var photo2 = photos.getPhotoOne() != null
+                ? Base64.getEncoder().encodeToString(photos.getPhotoTwo())
+                : null;
+        var photo3 = photos.getPhotoOne() != null
+                ? Base64.getEncoder().encodeToString(photos.getPhotoThree())
+                : null;
+        var planBase64 = photos.getPhotoOne() != null
+                ? Base64.getEncoder().encodeToString(plan.getPhoto())
+                : null;
+        var menuBase64 = photos.getPhotoOne() != null
+                ? Base64.getEncoder().encodeToString(menu.getPhoto())
+                : null;
+        photosBase64.add(photo1);
+        photosBase64.add(photo2);
+        photosBase64.add(photo3);
+//        photosBase64.add(Base64.getEncoder().encodeToString(photos.getPhotoOne()));
+//        photosBase64.add(Base64.getEncoder().encodeToString(photos.getPhotoTwo()));
+//        photosBase64.add(Base64.getEncoder().encodeToString(photos.getPhotoThree()));
+//        var planBase64 = Base64.getEncoder().encodeToString(plan.getPhoto());
+//        var menuBase64 = Base64.getEncoder().encodeToString(menu.getPhoto());
         var data = new RestaurantData(
                 restaurant.getName(),
                 restaurant.getTown().getName(),
@@ -126,7 +144,7 @@ public class AdminRestService {
         restaurantRepository.save(restaurant);
     }
 
-    public void createRestaurant (UserEntity user, String photo){
+    public void createRestaurant (UserEntity user){
         if (restaurantRepository.existsByUser(user))
             throw new UsernameNotFoundException("Пользователь ужя является администратором ресторана");
 
@@ -146,37 +164,37 @@ public class AdminRestService {
 
 //        var photoByte = photo.getBytes();
 //        var type = photo.getContentType();
-        var photoByte = Base64.getDecoder().decode(photo);
-        var type = "image/jpg";
-        savePhotoRest(user, photoByte, type);
-        saveMenu(user, photoByte, type);
-        savePlan(user, photoByte, type);
+//        var photoByte = Base64.getDecoder().decode(photo);
+//        var type = "image/jpg";
+        savePhotoRest(user);
+        saveMenu(user);
+        savePlan(user);
     }
 
-    private void savePhotoRest(UserEntity user, byte[] bytePhoto, String type) {
+    private void savePhotoRest(UserEntity user) {
         var photos = new PhotoRestaurantEntity();
         photos.setUser(user);
-        photos.setPhotoOne(bytePhoto);
-        photos.setContentTypeOne(type);
-        photos.setPhotoTwo(bytePhoto);
-        photos.setContentTypeTwo(type);
-        photos.setPhotoThree(bytePhoto);
-        photos.setContentTypeThree(type);
+//        photos.setPhotoOne(bytePhoto);
+//        photos.setContentTypeOne(type);
+//        photos.setPhotoTwo(bytePhoto);
+//        photos.setContentTypeTwo(type);
+//        photos.setPhotoThree(bytePhoto);
+//        photos.setContentTypeThree(type);
         photoRestaurantRepository.save(photos);
     }
-    private void savePlan(UserEntity user, byte[] bytePhoto, String type) {
+    private void savePlan(UserEntity user) {
         var photo = new PhotoPlanEntity();
         photo.setUser(user);
-        photo.setPhoto(bytePhoto);
-        photo.setContentType(type);
+//        photo.setPhoto(bytePhoto);
+//        photo.setContentType(type);
         photoPlanRepository.save(photo);
     }
 
-    private void saveMenu(UserEntity user, byte[] bytePhoto, String type) {
+    private void saveMenu(UserEntity user) {
         var photo = new PhotoMenuEntity();
         photo.setUser(user);
-        photo.setPhoto(bytePhoto);
-        photo.setContentType(type);
+//        photo.setPhoto(bytePhoto);
+//        photo.setContentType(type);
         photoMenuRepository.save(photo);
     }
 

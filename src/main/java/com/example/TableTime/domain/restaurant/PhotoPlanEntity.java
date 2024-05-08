@@ -28,10 +28,10 @@ public class PhotoPlanEntity {
     private UserEntity user;
 
     @Lob
-    @Column(name = "photo", nullable = false)
+    @Column(name = "photo", nullable = true)
     private byte[] photo;
 
-    @Column(name = "contentType", nullable = false)
+    @Column(name = "contentType", nullable = true)
     private String contentType;
 
 }

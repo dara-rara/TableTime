@@ -23,15 +23,7 @@ public class PhotoPlanEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_photo;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_user")
-    private UserEntity user;
-
     @Lob
     @Column(name = "photo", nullable = true)
-    private byte[] photo;
-
-    @Column(name = "contentType", nullable = true)
-    private String contentType;
-
+    private String photo;
 }

@@ -23,29 +23,15 @@ public class PhotoRestaurantEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_photo;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_user")
-    private UserEntity user;
-
     @Lob
     @Column(name = "photo1", nullable = true)
-    private byte[] photoOne;
-
-    @Column(name = "contentType1", nullable = true)
-    private String contentTypeOne;
+    private String photoOne;
 
     @Lob
     @Column(name = "photo2", nullable = true)
-    private byte[] photoTwo;
-
-    @Column(name = "contentType2", nullable = true)
-    private String contentTypeTwo;
+    private String photoTwo;
 
     @Lob
     @Column(name = "photo3", nullable = true)
-    private byte[] photoThree;
-
-    @Column(name = "contentType3", nullable = true)
-    private String contentTypeThree;
-
+    private String photoThree;
 }

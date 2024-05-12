@@ -9,5 +9,4 @@ import java.util.Optional;
 
 @Repository
 public interface PhotoMenuRepository extends JpaRepository<PhotoMenuEntity,Long> {
-    Optional<PhotoMenuEntity> findByUser (UserEntity userEntity);
 }

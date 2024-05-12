@@ -10,6 +10,4 @@ import java.util.Optional;
 
 @Repository
 public interface PhotoRestaurantRepository extends JpaRepository<PhotoRestaurantEntity,Long> {
-
-    Optional<PhotoRestaurantEntity> findByUser(UserEntity user);
 }

@@ -9,6 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface PhotoPlanRepository extends JpaRepository<PhotoPlanEntity,Long> {
-    Optional<PhotoPlanEntity> findByUser (UserEntity userEntity);
 }
 

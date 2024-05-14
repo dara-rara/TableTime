@@ -38,7 +38,7 @@ public class SecurityConfig{
         http.csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/TableTime/users", "/TableTime/login").permitAll()
+                        .requestMatchers("/TableTime/users", "/TableTime/login", "/TableTime/restaurants/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider())

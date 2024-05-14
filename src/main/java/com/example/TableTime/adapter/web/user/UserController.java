@@ -20,15 +20,4 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @RequestMapping(value = "/TableTime/", produces = APPLICATION_JSON_VALUE)
 public class UserController {
 
-    private final RestaurantService restaurantService;
-
-    @GetMapping("/restaurants")
-    public List<RestaurantList> getRestList() {
-        return restaurantService.listRest();
-    }
-
-    @GetMapping("/{id}")
-    public RestaurantData getRest(@PathVariable Long id) {
-        return restaurantService.getFormRestaurant(restaurantService.findId(id));
-    }
 }

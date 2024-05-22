@@ -32,6 +32,7 @@ public class AdminRestService {
     private final PhotoPlanRepository photoPlanRepository;
     private final PhotoRestaurantRepository photoRestaurantRepository;
     private final RestaurantService restaurantService;
+    private final TableRepository tableRepository;
 
     public RestaurantEntity getRestaurant(UserEntity user) {
         var restaurant = restaurantRepository.findByUser(user);
@@ -72,7 +73,18 @@ public class AdminRestService {
         restaurant.setEnding(LocalTime.parse(form.ending()));
         restaurant.setPhone(form.phone());
         restaurant.setDescription(form.description());
-        restaurant.setTables(Integer.parseInt(form.tables()));
+
+        var count = Integer.parseInt(form.tables());
+        if (count != 0 && restaurant.getTables() == 0) {
+            for (var i = 1; i <= count; i++) {
+                var table = new TableEntity();
+                table.setRestaurant(restaurant);
+                table.setNumber(i);
+                tableRepository.save(table);
+            }
+        }
+
+        restaurant.setTables(count);
         restaurantRepository.save(restaurant);
     }
 }

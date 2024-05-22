@@ -2,8 +2,11 @@ package com.example.TableTime.service;
 
 import com.example.TableTime.adapter.repository.*;
 import com.example.TableTime.adapter.web.adminRest.dto.RestaurantData;
-import com.example.TableTime.adapter.web.user.dto.RestaurantList;
+import com.example.TableTime.adapter.web.auth.dto.RestaurantList;
 import com.example.TableTime.domain.restaurant.*;
+import com.example.TableTime.domain.restaurant.photo.PhotoMenuEntity;
+import com.example.TableTime.domain.restaurant.photo.PhotoPlanEntity;
+import com.example.TableTime.domain.restaurant.photo.PhotoRestaurantEntity;
 import com.example.TableTime.domain.user.UserEntity;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

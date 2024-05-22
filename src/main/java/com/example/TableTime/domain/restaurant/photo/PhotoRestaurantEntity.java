@@ -1,4 +1,4 @@
-package com.example.TableTime.domain.restaurant;
+package com.example.TableTime.domain.restaurant.photo;
 
 import com.example.TableTime.domain.user.UserEntity;
 import jakarta.persistence.*;
@@ -14,17 +14,24 @@ import static lombok.AccessLevel.PRIVATE;
 @Setter
 @Getter
 @Entity
-@Table(name = "PhotoMenu")
+@Table(name = "PhotoRestaurants")
 @FieldNameConstants
 @NoArgsConstructor
-public class PhotoMenuEntity {
+public class PhotoRestaurantEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_photo;
 
     @Lob
-    @Column(name = "photo", nullable = true)
-    private String photo;
+    @Column(name = "photo1", nullable = true)
+    private String photoOne;
 
+    @Lob
+    @Column(name = "photo2", nullable = true)
+    private String photoTwo;
+
+    @Lob
+    @Column(name = "photo3", nullable = true)
+    private String photoThree;
 }

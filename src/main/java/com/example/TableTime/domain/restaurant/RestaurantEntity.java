@@ -1,5 +1,8 @@
 package com.example.TableTime.domain.restaurant;
 
+import com.example.TableTime.domain.restaurant.photo.PhotoMenuEntity;
+import com.example.TableTime.domain.restaurant.photo.PhotoPlanEntity;
+import com.example.TableTime.domain.restaurant.photo.PhotoRestaurantEntity;
 import com.example.TableTime.domain.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -19,6 +22,7 @@ import static lombok.AccessLevel.PRIVATE;
 @FieldNameConstants
 @NoArgsConstructor
 public class RestaurantEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_rest;

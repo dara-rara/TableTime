@@ -4,7 +4,6 @@ import com.example.TableTime.adapter.web.adminApp.dto.RoleList;
 import com.example.TableTime.adapter.web.adminApp.dto.UserRequest;
 import com.example.TableTime.domain.user.Role;
 import com.example.TableTime.service.AdminAppService;
-import com.example.TableTime.service.AdminRestService;
 import com.example.TableTime.service.RestaurantService;
 import com.example.TableTime.service.UserService;
 import lombok.AccessLevel;

@@ -1,4 +1,4 @@
 package com.example.TableTime.adapter.web.adminRest.dto;
 
-public record TablesForm(Integer count) {
+public record TablesForm(Integer table) {
 }

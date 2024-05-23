@@ -80,7 +80,7 @@ public class AdminRestService {
 
     public void updateTables(UserEntity user, TablesForm form) {
         var restaurant = getRestaurant(user);
-        var count = form.count();
+        var count = form.table();
         if (count != 0 && restaurant.getTables() == 0) {
             for (var i = 1; i <= count; i++) {
                 var table = new TableEntity();

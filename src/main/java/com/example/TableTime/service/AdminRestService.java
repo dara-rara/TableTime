@@ -3,6 +3,7 @@ package com.example.TableTime.service;
 import com.example.TableTime.adapter.repository.*;
 import com.example.TableTime.adapter.web.adminRest.dto.RestaurantData;
 import com.example.TableTime.adapter.web.adminRest.dto.RestaurantInfo;
+import com.example.TableTime.adapter.web.adminRest.dto.TablesForm;
 import com.example.TableTime.domain.restaurant.*;
 import com.example.TableTime.domain.user.UserEntity;
 import lombok.AccessLevel;
@@ -74,7 +75,12 @@ public class AdminRestService {
         restaurant.setPhone(form.phone());
         restaurant.setDescription(form.description());
 
-        var count = Integer.parseInt(form.tables());
+        restaurantRepository.save(restaurant);
+    }
+
+    public void updateTables(UserEntity user, TablesForm form) {
+        var restaurant = getRestaurant(user);
+        var count = form.count();
         if (count != 0 && restaurant.getTables() == 0) {
             for (var i = 1; i <= count; i++) {
                 var table = new TableEntity();
@@ -83,7 +89,6 @@ public class AdminRestService {
                 tableRepository.save(table);
             }
         }
-
         restaurant.setTables(count);
         restaurantRepository.save(restaurant);
     }

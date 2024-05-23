@@ -15,7 +15,5 @@ public record RestaurantInfo(@NotBlank
                              @NotBlank
                              String phone,
                              @NotBlank
-                             String description,
-                             @NotBlank
-                             String tables){
+                             String description){
 }

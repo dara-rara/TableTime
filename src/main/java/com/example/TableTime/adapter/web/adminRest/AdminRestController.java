@@ -1,9 +1,6 @@
 package com.example.TableTime.adapter.web.adminRest;
 
-import com.example.TableTime.adapter.web.adminRest.dto.PhotoMenuOrPlan;
-import com.example.TableTime.adapter.web.adminRest.dto.PhotoRest;
-import com.example.TableTime.adapter.web.adminRest.dto.RestaurantData;
-import com.example.TableTime.adapter.web.adminRest.dto.RestaurantInfo;
+import com.example.TableTime.adapter.web.adminRest.dto.*;
 import com.example.TableTime.domain.user.UserEntity;
 import com.example.TableTime.service.AdminRestService;
 import com.example.TableTime.service.RestaurantService;
@@ -40,6 +37,11 @@ public class AdminRestController {
     @PostMapping("/updateMenu")
     public void updateMenu(@AuthenticationPrincipal UserEntity user, @RequestBody PhotoMenuOrPlan photo) {
         adminRestService.updateMenu(user, photo.photo());
+    }
+
+    @PostMapping("/updateTable")
+    public void updateTable(@AuthenticationPrincipal UserEntity user, @RequestBody TablesForm form) {
+        adminRestService.updateTables(user, form);
     }
 
     @PostMapping("/updatePlan")

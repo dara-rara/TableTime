@@ -62,6 +62,7 @@ public class RestaurantService {
         photosData.add(restaurant.getPhotoRest().getPhotoTwo());
         photosData.add(restaurant.getPhotoRest().getPhotoThree());
         var data = new RestaurantData(
+                restaurant.getId_rest(),
                 restaurant.getName(),
                 restaurant.getTown().getName(),
                 restaurant.getAddress(),

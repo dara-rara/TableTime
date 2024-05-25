@@ -2,7 +2,8 @@ package com.example.TableTime.adapter.web.adminRest.dto;
 
 import java.util.List;
 
-public record RestaurantData(String name,
+public record RestaurantData(Long id,
+                             String name,
                              String town,
                              String address,
                              String opening,

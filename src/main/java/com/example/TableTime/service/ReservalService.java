@@ -5,6 +5,7 @@ import com.example.TableTime.adapter.repository.RestaurantRepository;
 import com.example.TableTime.adapter.repository.TableRepository;
 import com.example.TableTime.adapter.web.user.dto.ReservalAndTableForm;
 import com.example.TableTime.adapter.web.user.dto.ReservalForm;
+import com.example.TableTime.adapter.web.user.dto.ReservalRequest;
 import com.example.TableTime.domain.restaurant.ReservalEntity;
 import com.example.TableTime.domain.user.UserEntity;
 import lombok.AccessLevel;
@@ -30,7 +31,7 @@ public class ReservalService {
     private final RestaurantRepository restaurantRepository;
     private final ReservalRepository reservalRepository;
 
-    public List<Integer> getFreeTables(ReservalForm form, Long id) throws ParseException {
+    public ReservalRequest getFreeTables(ReservalForm form, Long id) throws ParseException {
         var allTables = tableRepository.findByAllTable(id);
 
         var resTables = tableRepository.findByReservalTable(id,
@@ -44,7 +45,7 @@ public class ReservalService {
             }
             return false;
         });
-        return allTables;
+        return new ReservalRequest(form.date(), form.timeStart(), form.timeEnd(), form.persons(), form.message(), allTables);
     }
 
     public void createReserval(ReservalAndTableForm form, Long id, UserEntity user) throws ParseException {

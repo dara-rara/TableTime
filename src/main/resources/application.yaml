@@ -21,6 +21,12 @@ spring:
 #  PROD_DB_USERNAME=postgres
 #  PROD_DB_PASSWORD=tIZHnOmjCFnZAYOXeNodNWbgmQJuxHSL
 
+#  PROD_DB_HOST=monorail.proxy.rlwy.net
+#  PROD_DB_PORT=44728
+#  PROD_DB_NAME=railway
+#  PROD_DB_USERNAME=postgres
+#  PROD_DB_PASSWORD=YKPmHEUwweShnkvERNLDRBQVuQUfcVvI
+
 
 token:
   signing:

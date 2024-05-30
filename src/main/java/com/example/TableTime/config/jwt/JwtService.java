@@ -75,7 +75,6 @@ public class JwtService {
                 .getBody();
     }
 
-
      //Получение ключа для подписи токена
     private Key getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(jwtSigningKey);

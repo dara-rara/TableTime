@@ -1,5 +1,8 @@
 package com.example.TableTime.domain.restaurant;
 
+import com.example.TableTime.domain.restaurant.photo.PhotoMenuEntity;
+import com.example.TableTime.domain.restaurant.photo.PhotoPlanEntity;
+import com.example.TableTime.domain.restaurant.photo.PhotoRestaurantEntity;
 import com.example.TableTime.domain.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -7,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.FieldNameConstants;
+import java.time.LocalTime;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -18,6 +22,7 @@ import static lombok.AccessLevel.PRIVATE;
 @FieldNameConstants
 @NoArgsConstructor
 public class RestaurantEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_rest;
@@ -26,25 +31,40 @@ public class RestaurantEntity {
     private String name;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_town", nullable = true)
+    @JoinColumn(name = "id_town", nullable = false)
     private TownEntity town;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_user")
     private UserEntity user;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_menu")
+    private PhotoMenuEntity menu;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_plan")
+    private PhotoPlanEntity plan;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_photo_rest")
+    private PhotoRestaurantEntity photoRest;
 
     @Column(name = "address", nullable = false)
     private String address;
 
     @Column(name = "opening", nullable = false)
-    private String opening;
+    private LocalTime opening;
 
     @Column(name = "ending", nullable = false)
-    private String ending;
+    private LocalTime ending;
 
     @Column(name = "phone", nullable = false)
     private String phone;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", nullable = false, length = 4000)
     private String description;
+
+    @Column(name = "tables", nullable = false)
+    private Integer tables;
 }

@@ -1,16 +1,20 @@
 package com.example.TableTime.adapter.web.user;
 
+import com.example.TableTime.adapter.web.auth.dto.RestaurantList;
+import com.example.TableTime.adapter.web.user.dto.ReservalAndTableForm;
+import com.example.TableTime.adapter.web.user.dto.ReservalForm;
+import com.example.TableTime.adapter.web.user.dto.ReservalRequest;
 import com.example.TableTime.domain.user.UserEntity;
+import com.example.TableTime.service.ReservalService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+import java.util.List;
 
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
@@ -21,9 +25,22 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @RequestMapping(value = "/TableTime/", produces = APPLICATION_JSON_VALUE)
 public class UserController {
 
-    @GetMapping("/user")
-    public UserDetails getUser(@AuthenticationPrincipal UserEntity user) {
-        return user;
+    private final ReservalService reservalService;
+
+    @PostMapping("/freeTable/{id}")
+    public ReservalRequest listFreeTable(@PathVariable Long id, @RequestBody ReservalForm form) throws ParseException {
+        return reservalService.getFreeTables(form, id);
     }
+
+    @PostMapping("/reserval/{id}")
+    public void createReserval(@PathVariable Long id, @RequestBody ReservalAndTableForm form,
+                                        @AuthenticationPrincipal UserEntity user) throws ParseException {
+        reservalService.createReserval(form, id, user);
+    }
+
+//    @GetMapping("/user")
+//    public void getUser(@AuthenticationPrincipal UserEntity user) {
+//
+//    }
 
 }

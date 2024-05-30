@@ -16,11 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
 
 @Service
 @Transactional
@@ -32,33 +27,35 @@ public class ReservalService {
     private final ReservalRepository reservalRepository;
 
     public ReservalRequest getFreeTables(ReservalForm form, Long id) throws ParseException {
-        var allTables = tableRepository.findByAllTable(id);
+        //var allTables = tableRepository.findByAllTable(id);
 
-        var resTables = tableRepository.findByReservalTable(id,
-                LocalDate.parse(form.date(), DateTimeFormatter.ofPattern("dd.MM.yyyy")),
+        var resTables = tableRepository.findByNotReservalTable(id,
+                new SimpleDateFormat("dd.MM.yyyy").parse(form.date()),
                 new SimpleDateFormat("HH:mm").parse(form.timeStart()),
                 new SimpleDateFormat("HH:mm").parse(form.timeEnd()));
-        allTables.removeIf(s -> {
-            if (resTables.contains(s)) {
-                resTables.remove(s);
-                return true;
-            }
-            return false;
-        });
-        return new ReservalRequest(form.date(), form.timeStart(), form.timeEnd(), form.persons(), form.message(), allTables);
+//        allTables.removeIf(s -> {
+//            if (resTables.contains(s)) {
+//                resTables.remove(s);
+//                return true;
+//            }
+//            return false;
+//        });
+        return new ReservalRequest(form.date(), form.timeStart(), form.timeEnd(), form.persons(), form.message(), resTables);
     }
 
     public void createReserval(ReservalAndTableForm form, Long id, UserEntity user) throws ParseException {
+        var restaurant = restaurantRepository.getReferenceById(id);
         var table = tableRepository.findByRestaurantAndNumber(
-                restaurantRepository.getReferenceById(id), form.table());
+                restaurant, form.table());
         var reserval = new ReservalEntity();
         reserval.setUser(user);
+        reserval.setRestaurant(restaurant);
         reserval.setTable(table);
         reserval.setPersons(form.persons());
         reserval.setTimeStart(new SimpleDateFormat("HH:mm").parse(form.timeStart()));
         reserval.setTimeEnd(new SimpleDateFormat("HH:mm").parse(form.timeEnd()));
-        reserval.setDate(LocalDate.parse(form.date(), DateTimeFormatter.ofPattern("dd.MM.yyyy")));
-        reserval.setState(true);
+        reserval.setDate(new SimpleDateFormat("dd.MM.yyyy").parse(form.date()));
+        reserval.setState("true");
         reserval.setMessage(form.message());
         reservalRepository.save(reserval);
     }

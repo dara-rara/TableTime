@@ -38,4 +38,9 @@ public class UserController {
         reservalService.createReserval(form, id, user);
     }
 
+//    @GetMapping("/user")
+//    public void getUser(@AuthenticationPrincipal UserEntity user) {
+//
+//    }
+
 }

@@ -21,7 +21,7 @@ public interface TableRepository extends JpaRepository<TableEntity,Long> {
             "WHERE t.id_rest = :id_rest\n" +
             "AND t.id_tab NOT IN (\n" +
             "    SELECT r.id_tab\n" +
-            "    FROM reservals r\n" +
+            "    FROM reservals_rest r\n" +
             "    WHERE r.date = :date\n" +
             "    AND r.state = 'true'\n" +
             "    AND ((:time1 BETWEEN r.time_start AND r.time_end\n" +

@@ -18,7 +18,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Setter
 @Getter
 @Entity
-@Table(name = "Reservals")
+@Table(name = "ReservalsRest")
 @FieldNameConstants
 @NoArgsConstructor
 public class ReservalEntity {

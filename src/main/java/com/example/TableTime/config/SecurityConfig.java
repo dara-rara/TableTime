@@ -5,7 +5,6 @@ import com.example.TableTime.config.jwt.AuthEntryPointJwt;
 import com.example.TableTime.config.jwt.JwtAuthenticationFilter;
 import com.example.TableTime.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -53,6 +52,7 @@ public class SecurityConfig{
         authProvider.setPasswordEncoder(passwordEncoder);
         return authProvider;
     }
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
             throws Exception {

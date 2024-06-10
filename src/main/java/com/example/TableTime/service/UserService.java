@@ -3,7 +3,7 @@ package com.example.TableTime.service;
 import com.example.TableTime.adapter.repository.ReservalRepository;
 import com.example.TableTime.adapter.repository.UserRepository;
 import com.example.TableTime.adapter.web.auth.dto.RegistrationRequest;
-import com.example.TableTime.adapter.web.user.dto.UserForm;
+import com.example.TableTime.adapter.web.user.dto.*;
 import com.example.TableTime.domain.user.Role;
 import com.example.TableTime.domain.user.UserEntity;
 import lombok.AccessLevel;
@@ -15,8 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Service
 @Transactional
@@ -43,7 +44,7 @@ public class UserService implements UserDetailsService{
     }
 
     public boolean userExists(String email, String username) {
-        return userRepository.existsByEmail(email) || userRepository.existsByUsername(username);
+        return userRepository.existsByEmail(email) || userRepository.existsByUsername(username) || username.startsWith("client");
     }
 
     public UserEntity getByUsername(String username) {
@@ -58,18 +59,59 @@ public class UserService implements UserDetailsService{
         return user.get();
     }
 
-//    public UserForm getUserInfo(UserEntity user) {
-//        var reservals = reservalRepository.findByUser(user);
-//        if (reservals.isEmpty()) {
-//        }
-//        else {
-//            for (var reserval : reservals) {
-//                if (reserval.getState().equals("true")
-//                        && reserval.getDate().equals(new SimpleDateFormat("yyyy-MM-dd").format(new Date()))
-//                        && reserval.getTimeStart().after(new SimpleDateFormat("HH:mm").format(new Date())).)
-//            }
-//        }
-//    }
+    public UserReservalForm getUserInfoReserval(UserEntity user) {
+        var reservals = reservalRepository.findByUserOrderByDate(user);
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        var dictReserval = new LinkedList<Reserval>();
+        if (reservals.isEmpty()) {
+
+        }
+        else {
+            for (var reserval : reservals) {
+                if (reserval.getState().equals("true")) {
+
+                    var datetime = reserval.getDate().atTime(reserval.getTimeEnd());
+                    if (currentDateTime.isAfter(datetime)) {
+                        reserval.setState("false");
+                        reservalRepository.save(reserval);
+                    }
+                }
+                var rest = reserval.getRestaurant();
+                var form = new Reserval(rest.getName(), rest.getPhone(),
+                        DateTimeFormatter.ofPattern("dd.MM.YYYY").format(reserval.getDate()),
+                        DateTimeFormatter.ofPattern("HH:mm").format(reserval.getTimeStart()),
+                        reserval.getTable().getNumber(),
+                        reserval.getPersons(),
+                        reserval.getMessage(),
+                        reserval.getState());
+
+                dictReserval.add(form);
+            }
+        }
+        return new UserReservalForm(user.getUsername(), user.getRealname(),
+                user.getEmail(), user.getPhone(), dictReserval);
+    }
+
+    public AccountUpdate updateUser (UserEntity user, AccountUpdate account) {
+        if (!user.getUsername().equals(account.getUsername())
+                && userRepository.existsByUsername(account.getUsername())) {
+            account.setMessage("Пользователь с таким логином уже существует!");
+            return account;
+        }
+        if (!user.getEmail().equals(account.getEmail())
+                && userRepository.existsByEmail(account.getEmail())) {
+            account.setMessage("Пользователь с такой почтой уже существует!");
+            return account;
+        }
+
+        user.setUsername(account.getUsername());
+        user.setRealname(account.getRealname());
+        user.setPhone(account.getPhone());
+        user.setEmail(account.getEmail());
+        userRepository.save(user);
+        account.setMessage("Изменения сохранены!");
+        return account;
+    }
 
     @Override
     public UserEntity loadUserByUsername(String username) throws UsernameNotFoundException {

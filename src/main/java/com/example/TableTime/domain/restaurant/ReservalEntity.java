@@ -44,15 +44,15 @@ public class ReservalEntity {
 
     @Temporal(TemporalType.TIME)
     @Column(name = "time_start", nullable = false)
-    private Date timeStart;
+    private LocalTime timeStart;
 
     @Temporal(TemporalType.TIME)
     @Column(name = "time_end", nullable = false)
-    private Date timeEnd;
+    private LocalTime timeEnd;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "date", nullable = false)
-    private Date date;
+    private LocalDate date;
 
     @Column(name = "state", nullable = false)
     private String state;

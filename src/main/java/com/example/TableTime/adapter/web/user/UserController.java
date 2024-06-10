@@ -1,11 +1,9 @@
 package com.example.TableTime.adapter.web.user;
 
-import com.example.TableTime.adapter.web.auth.dto.RestaurantList;
-import com.example.TableTime.adapter.web.user.dto.ReservalAndTableForm;
-import com.example.TableTime.adapter.web.user.dto.ReservalForm;
-import com.example.TableTime.adapter.web.user.dto.ReservalRequest;
+import com.example.TableTime.adapter.web.user.dto.*;
 import com.example.TableTime.domain.user.UserEntity;
 import com.example.TableTime.service.ReservalService;
+import com.example.TableTime.service.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -14,7 +12,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.util.List;
 
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
@@ -26,10 +23,11 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 public class UserController {
 
     private final ReservalService reservalService;
+    private final UserService userService;
 
     @PostMapping("/freeTable/{id}")
     public ReservalRequest listFreeTable(@PathVariable Long id, @RequestBody ReservalForm form) throws ParseException {
-        return reservalService.getFreeTables(form, id);
+        return reservalService.getFreeTablesUser(form, id);
     }
 
     @PostMapping("/reserval/{id}")
@@ -38,9 +36,20 @@ public class UserController {
         reservalService.createReserval(form, id, user);
     }
 
-//    @GetMapping("/user")
-//    public void getUser(@AuthenticationPrincipal UserEntity user) {
-//
-//    }
+    @GetMapping("/user")
+    public UserReservalForm getUser(@AuthenticationPrincipal UserEntity user) {
+        return userService.getUserInfoReserval(user);
+    }
+
+    @PostMapping("/userUpdate")
+    public AccountUpdate updateUser(@AuthenticationPrincipal UserEntity user, @RequestBody AccountUpdate accountUpdate) {
+        return userService.updateUser(user, accountUpdate);
+    }
+
+    @PostMapping("/cancelReserval")
+    public UserReservalForm cancelReserval(@AuthenticationPrincipal UserEntity user, @RequestBody ReservalUser userReserval) throws ParseException {
+        reservalService.cancelReservalUser(user, userReserval);
+        return userService.getUserInfoReserval(user);
+    }
 
 }

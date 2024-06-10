@@ -1,9 +1,8 @@
 package com.example.TableTime.service;
 
 import com.example.TableTime.adapter.repository.*;
-import com.example.TableTime.adapter.web.adminRest.dto.RestaurantData;
-import com.example.TableTime.adapter.web.adminRest.dto.RestaurantInfo;
-import com.example.TableTime.adapter.web.adminRest.dto.TablesForm;
+import com.example.TableTime.adapter.web.adminRest.dto.*;
+import com.example.TableTime.adapter.web.user.dto.Reserval;
 import com.example.TableTime.domain.restaurant.*;
 import com.example.TableTime.domain.user.UserEntity;
 import lombok.AccessLevel;
@@ -12,14 +11,15 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
+import java.util.LinkedList;
+
 
 @Service
 @Transactional
@@ -34,6 +34,8 @@ public class AdminRestService {
     private final PhotoRestaurantRepository photoRestaurantRepository;
     private final RestaurantService restaurantService;
     private final TableRepository tableRepository;
+    private final UserRepository userRepository;
+    private final ReservalRepository reservalRepository;
 
     public RestaurantEntity getRestaurant(UserEntity user) {
         var restaurant = restaurantRepository.findByUser(user);
@@ -92,4 +94,68 @@ public class AdminRestService {
         restaurant.setTables(count);
         restaurantRepository.save(restaurant);
     }
+
+    public AccountRestUpdate updateUser (UserEntity user, AccountRestUpdate accountRestUpdate) {
+        if (!user.getUsername().equals(accountRestUpdate.getUsername())
+                && userRepository.existsByUsername(accountRestUpdate.getUsername())) {
+            accountRestUpdate.setMessage("Пользователь с таким логином уже существует!");
+            return accountRestUpdate;
+        }
+        if (!user.getEmail().equals(accountRestUpdate.getEmail())
+                && userRepository.existsByEmail(accountRestUpdate.getEmail())) {
+            accountRestUpdate.setMessage("Пользователь с такой почтой уже существует!");
+            return accountRestUpdate;
+        }
+
+        user.setUsername(accountRestUpdate.getUsername());
+        user.setPhone(accountRestUpdate.getPhone());
+        user.setEmail(accountRestUpdate.getEmail());
+        userRepository.save(user);
+        accountRestUpdate.setMessage("Изменения сохранены!");
+        return accountRestUpdate;
+    }
+
+    public RestReservalForm getRestInfoReserval (UserEntity user, RestDateRequest request) throws ParseException {
+        var rest = getRestaurantEntity(user);
+        var date = new SimpleDateFormat("dd.MM.yyyy").parse(request.date());
+        var reservals = reservalRepository
+                .findByRestaurantAndDateOrderByTimeStart(
+                        rest,
+                        date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        var dictReserval = new LinkedList<Reserval>();
+        if (reservals.isEmpty()) {
+
+        } else {
+            for (var reserval : reservals) {
+                if (reserval.getState().equals("true")) {
+
+                    var datetime = reserval.getDate().atTime(reserval.getTimeEnd());
+                    if (currentDateTime.isAfter(datetime)) {
+                        reserval.setState("false");
+                        reservalRepository.save(reserval);
+                    }
+                }
+                var userRes = reserval.getUser();
+                var form = new Reserval(userRes.getRealname(), userRes.getPhone(),
+                        DateTimeFormatter.ofPattern("dd.MM.YYYY").format(reserval.getDate()),
+                        DateTimeFormatter.ofPattern("HH:mm").format(reserval.getTimeStart()),
+                        reserval.getTable().getNumber(),
+                        reserval.getPersons(),
+                        reserval.getMessage(),
+                        reserval.getState());
+
+                dictReserval.add(form);
+            }
+        }
+        return new RestReservalForm(user.getUsername(), user.getEmail(), user.getPhone(), dictReserval);
+    }
+
+    private RestaurantEntity getRestaurantEntity(UserEntity user) {
+        var restaurant = restaurantRepository.findByUser(user);
+        if (restaurant.isEmpty()) throw new RuntimeException("Пользователь не админ ресторана");//переделать!
+        return restaurant.get();
+    }
+
+
 }

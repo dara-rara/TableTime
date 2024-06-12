@@ -2,6 +2,7 @@ package com.example.TableTime.service;
 
 import com.example.TableTime.adapter.repository.*;
 import com.example.TableTime.adapter.web.adminRest.dto.*;
+import com.example.TableTime.adapter.web.adminRest.dto.reserval.RestReservalForm;
 import com.example.TableTime.adapter.web.user.dto.Reserval;
 import com.example.TableTime.domain.restaurant.*;
 import com.example.TableTime.domain.user.UserEntity;
@@ -96,14 +97,13 @@ public class AdminRestService {
     }
 
     public AccountRestUpdate updateUser (UserEntity user, AccountRestUpdate accountRestUpdate) {
+        //нужна оброботка этих двух if-ов
         if (!user.getUsername().equals(accountRestUpdate.getUsername())
                 && userRepository.existsByUsername(accountRestUpdate.getUsername())) {
-            accountRestUpdate.setMessage("Пользователь с таким логином уже существует!");
             return accountRestUpdate;
         }
         if (!user.getEmail().equals(accountRestUpdate.getEmail())
                 && userRepository.existsByEmail(accountRestUpdate.getEmail())) {
-            accountRestUpdate.setMessage("Пользователь с такой почтой уже существует!");
             return accountRestUpdate;
         }
 
@@ -111,7 +111,6 @@ public class AdminRestService {
         user.setPhone(accountRestUpdate.getPhone());
         user.setEmail(accountRestUpdate.getEmail());
         userRepository.save(user);
-        accountRestUpdate.setMessage("Изменения сохранены!");
         return accountRestUpdate;
     }
 

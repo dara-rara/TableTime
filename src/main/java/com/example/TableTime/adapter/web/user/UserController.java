@@ -42,8 +42,8 @@ public class UserController {
     }
 
     @PostMapping("/userUpdate")
-    public AccountUpdate updateUser(@AuthenticationPrincipal UserEntity user, @RequestBody AccountUpdate accountUpdate) {
-        return userService.updateUser(user, accountUpdate);
+    public void updateUser(@AuthenticationPrincipal UserEntity user, @RequestBody AccountUpdate accountUpdate) {
+        userService.updateUser(user, accountUpdate);
     }
 
     @PostMapping("/cancelReserval")

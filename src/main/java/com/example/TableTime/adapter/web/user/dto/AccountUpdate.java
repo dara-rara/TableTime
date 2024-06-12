@@ -12,5 +12,4 @@ public class AccountUpdate {
     private String realname;
     private String email;
     private String phone;
-    private String message;
 }

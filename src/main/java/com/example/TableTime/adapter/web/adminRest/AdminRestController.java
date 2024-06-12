@@ -1,7 +1,7 @@
 package com.example.TableTime.adapter.web.adminRest;
 
 import com.example.TableTime.adapter.web.adminRest.dto.*;
-import com.example.TableTime.adapter.web.user.dto.*;
+import com.example.TableTime.adapter.web.adminRest.dto.reserval.*;
 import com.example.TableTime.domain.user.UserEntity;
 import com.example.TableTime.service.AdminRestService;
 import com.example.TableTime.service.ReservalService;
@@ -60,8 +60,8 @@ public class AdminRestController {
     }
 
     @PostMapping("/userUpdate")
-    public AccountRestUpdate updateUser(@AuthenticationPrincipal UserEntity user, @RequestBody AccountRestUpdate accountRequest) {
-        return adminRestService.updateUser(user, accountRequest);
+    public void updateUser(@AuthenticationPrincipal UserEntity user, @RequestBody AccountRestUpdate accountRequest) {
+        adminRestService.updateUser(user, accountRequest);
     }
 
     @PostMapping("/getReservals")
@@ -77,7 +77,7 @@ public class AdminRestController {
     }
 
     @PostMapping("/freeTable")
-    public ReservalRestRequest listFreeTable( @AuthenticationPrincipal UserEntity user, @RequestBody ReservalRestFreeTable form) throws ParseException {
+    public ReservalRestRequest listFreeTable(@AuthenticationPrincipal UserEntity user, @RequestBody ReservalRestFreeTable form) throws ParseException {
         var id = adminRestService.getRestaurant(user).getId_rest();
         return reservalService.getFreeTablesRest(form, id);
     }

@@ -93,14 +93,13 @@ public class UserService implements UserDetailsService{
     }
 
     public AccountUpdate updateUser (UserEntity user, AccountUpdate account) {
+        //нужна оброботка этих двух if-ов
         if (!user.getUsername().equals(account.getUsername())
                 && userRepository.existsByUsername(account.getUsername())) {
-            account.setMessage("Пользователь с таким логином уже существует!");
             return account;
         }
         if (!user.getEmail().equals(account.getEmail())
                 && userRepository.existsByEmail(account.getEmail())) {
-            account.setMessage("Пользователь с такой почтой уже существует!");
             return account;
         }
 
@@ -109,7 +108,6 @@ public class UserService implements UserDetailsService{
         user.setPhone(account.getPhone());
         user.setEmail(account.getEmail());
         userRepository.save(user);
-        account.setMessage("Изменения сохранены!");
         return account;
     }
 

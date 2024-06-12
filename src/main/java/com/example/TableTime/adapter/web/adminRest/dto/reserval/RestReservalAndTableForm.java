@@ -1,4 +1,4 @@
-package com.example.TableTime.adapter.web.adminRest.dto;
+package com.example.TableTime.adapter.web.adminRest.dto.reserval;
 
 public record RestReservalAndTableForm(String name,
                                        String phone,

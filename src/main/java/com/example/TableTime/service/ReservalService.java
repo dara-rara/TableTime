@@ -87,34 +87,39 @@ public class ReservalService {
         reservalRepository.save(reserval);
     }
 
-    public void cancelReservalUser(UserEntity user, ReservalUser userReserval) throws ParseException {
-        var date = new SimpleDateFormat("dd.MM.yyyy").parse(userReserval.date());
-        var reserval = reservalRepository
-                .findByUserAndDateAndTimeStart(user,
-                        date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-                        LocalTime.parse(userReserval.time()));
-        if (reserval.isEmpty()) {
-            throw new RuntimeException("Бронь не найдена!");
-            //переделать!
-        }
-        var entity = reserval.get();
-        entity.setState("false");
-        reservalRepository.save(entity);
-    }
+//    public void cancelReservalUser(UserEntity user, ReservalUser userReserval) throws ParseException {
+//        var date = new SimpleDateFormat("dd.MM.yyyy").parse(userReserval.date());
+//        var reserval = reservalRepository
+//                .findByUserAndDateAndTimeStart(user,
+//                        date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+//                        LocalTime.parse(userReserval.time()));
+//        if (reserval.isEmpty()) {
+//            throw new RuntimeException("Бронь не найдена!");
+//            //переделать!
+//        }
+//        var entity = reserval.get();
+//        entity.setState("false");
+//        reservalRepository.save(entity);
+//    }
+//
+//    public void cancelReservalRest(UserEntity user, ReservalRest restReserval) throws ParseException {
+//        var userClient = userService.getByUsername(restReserval.username());
+//        var date = new SimpleDateFormat("dd.MM.yyyy").parse(restReserval.date());
+//        var reserval = reservalRepository
+//                .findByUserAndDateAndTimeStart(userClient,
+//                        date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+//                        LocalTime.parse(restReserval.time()));
+//        if (reserval.isEmpty()) {
+//            throw new RuntimeException("Бронь не найдена!");
+//            //переделать!
+//        }
+//        var entity = reserval.get();
+//        entity.setState("false");
+//        reservalRepository.save(entity);
+//    }
 
-    public void cancelReservalRest(UserEntity user, ReservalRest restReserval) throws ParseException {
-        var userClient = userService.getByUsername(restReserval.username());
-        var date = new SimpleDateFormat("dd.MM.yyyy").parse(restReserval.date());
-        var reserval = reservalRepository
-                .findByUserAndDateAndTimeStart(userClient,
-                        date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-                        LocalTime.parse(restReserval.time()));
-        if (reserval.isEmpty()) {
-            throw new RuntimeException("Бронь не найдена!");
-            //переделать!
-        }
-        var entity = reserval.get();
-        entity.setState("false");
-        reservalRepository.save(entity);
+    public void cancelReserval(Long id) {
+        var reserval = reservalRepository.getReferenceById(id);
+        reservalRepository.delete(reserval);
     }
 }

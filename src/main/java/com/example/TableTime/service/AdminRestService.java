@@ -136,7 +136,7 @@ public class AdminRestService {
                     }
                 }
                 var userRes = reserval.getUser();
-                var form = new Reserval(userRes.getRealname(), userRes.getPhone(),
+                var form = new Reserval(reserval.getId_res(), userRes.getRealname(), userRes.getPhone(),
                         DateTimeFormatter.ofPattern("dd.MM.YYYY").format(reserval.getDate()),
                         DateTimeFormatter.ofPattern("HH:mm").format(reserval.getTimeStart()),
                         reserval.getTable().getNumber(),

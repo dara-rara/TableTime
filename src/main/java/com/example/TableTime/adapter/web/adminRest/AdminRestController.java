@@ -8,6 +8,7 @@ import com.example.TableTime.service.ReservalService;
 import com.example.TableTime.service.RestaurantService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.Delegate;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -69,11 +70,9 @@ public class AdminRestController {
         return adminRestService.getRestInfoReserval(user, request);
     }
 
-    @PostMapping("/cancelReserval")
-    public RestReservalForm cancelReserval(@AuthenticationPrincipal UserEntity user, @RequestBody ReservalRest reserval) throws ParseException {
-        reservalService.cancelReservalRest(user, reserval);
-        var request = new RestDateRequest(reserval.date());
-        return adminRestService.getRestInfoReserval(user, request);
+    @DeleteMapping("/cancelReserval/{id}")
+    public void cancelReservalRest(@PathVariable Long id, @AuthenticationPrincipal UserEntity user) throws ParseException {
+        reservalService.cancelReserval(id);
     }
 
     @PostMapping("/freeTable")

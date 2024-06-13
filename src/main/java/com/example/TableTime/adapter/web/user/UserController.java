@@ -46,10 +46,8 @@ public class UserController {
         userService.updateUser(user, accountUpdate);
     }
 
-    @PostMapping("/cancelReserval")
-    public UserReservalForm cancelReserval(@AuthenticationPrincipal UserEntity user, @RequestBody ReservalUser userReserval) throws ParseException {
-        reservalService.cancelReservalUser(user, userReserval);
-        return userService.getUserInfoReserval(user);
+    @DeleteMapping("/cancelReserval/{id}")
+    public void cancelReserval(@PathVariable Long id, @AuthenticationPrincipal UserEntity user) throws ParseException {
+        reservalService.cancelReserval(id);
     }
-
 }

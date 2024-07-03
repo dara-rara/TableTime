@@ -2,6 +2,7 @@ package com.example.TableTime.service;
 
 import com.example.TableTime.adapter.repository.*;
 import com.example.TableTime.adapter.web.adminRest.dto.RestaurantData;
+import com.example.TableTime.adapter.web.adminRest.dto.ReviewData;
 import com.example.TableTime.adapter.web.auth.dto.RestaurantList;
 import com.example.TableTime.domain.restaurant.*;
 import com.example.TableTime.domain.restaurant.photo.PhotoMenuEntity;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -30,6 +32,7 @@ public class RestaurantService {
     private final PhotoMenuRepository photoMenuRepository;
     private final PhotoPlanRepository photoPlanRepository;
     private final PhotoRestaurantRepository photoRestaurantRepository;
+    private final ReviewRepository reviewRepository;
 
     public RestaurantEntity findId (Long id) {
         return restaurantRepository.findById(id).get();
@@ -61,6 +64,16 @@ public class RestaurantService {
         photosData.add(restaurant.getPhotoRest().getPhotoOne());
         photosData.add(restaurant.getPhotoRest().getPhotoTwo());
         photosData.add(restaurant.getPhotoRest().getPhotoThree());
+
+        var reviews = reviewRepository.findByRestaurant(restaurant);
+        var list = new LinkedList<ReviewData>();
+        if (!reviews.isEmpty()) {
+            for (var review : reviews) {
+                var form = new ReviewData(review.getUser().getUsername(),
+                        review.getText(), review.getGrade());
+                list.add(form);
+            }
+        }
         var data = new RestaurantData(
                 restaurant.getId_rest(),
                 restaurant.getName(),
@@ -73,7 +86,9 @@ public class RestaurantService {
                 restaurant.getTables().toString(),
                 photosData,
                 restaurant.getPlan().getPhoto(),
-                restaurant.getMenu().getPhoto()
+                restaurant.getMenu().getPhoto(),
+                list,
+                Math.round(reviewRepository.findAvgGrade(restaurant.getId_rest()))
         );
         return data;
     }

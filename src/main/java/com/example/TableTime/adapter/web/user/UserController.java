@@ -1,8 +1,14 @@
 package com.example.TableTime.adapter.web.user;
 
 import com.example.TableTime.adapter.web.user.dto.*;
+import com.example.TableTime.adapter.web.user.dto.reserval.ReservalAndTableForm;
+import com.example.TableTime.adapter.web.user.dto.reserval.ReservalForm;
+import com.example.TableTime.adapter.web.user.dto.reserval.ReservalRequest;
+import com.example.TableTime.adapter.web.user.dto.reserval.UserReservalForm;
+import com.example.TableTime.adapter.web.user.dto.review.ReviewForm;
 import com.example.TableTime.domain.user.UserEntity;
 import com.example.TableTime.service.ReservalService;
+import com.example.TableTime.service.ReviewService;
 import com.example.TableTime.service.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +30,7 @@ public class UserController {
 
     private final ReservalService reservalService;
     private final UserService userService;
+    private final ReviewService reviewService;
 
     @PostMapping("/freeTable/{id}")
     public ReservalRequest listFreeTable(@PathVariable Long id, @RequestBody ReservalForm form) throws ParseException {
@@ -32,8 +39,8 @@ public class UserController {
 
     @PostMapping("/reserval/{id}")
     public void createReserval(@PathVariable Long id, @RequestBody ReservalAndTableForm form,
-                                        @AuthenticationPrincipal UserEntity user) throws ParseException {
-        reservalService.createReserval(form, id, user);
+                               @AuthenticationPrincipal UserEntity user) throws ParseException {
+        reservalService.createReservalUser(form, id, user);
     }
 
     @GetMapping("/user")
@@ -49,5 +56,10 @@ public class UserController {
     @DeleteMapping("/cancelReserval/{id}")
     public void cancelReserval(@PathVariable Long id, @AuthenticationPrincipal UserEntity user) throws ParseException {
         reservalService.cancelReserval(id);
+    }
+
+    @PostMapping("/review")
+    public void createReview (@RequestBody ReviewForm reviewForm) {
+        reviewService.createReview(reviewForm);
     }
 }

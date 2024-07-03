@@ -1,4 +1,4 @@
-package com.example.TableTime.adapter.web.user.dto;
+package com.example.TableTime.adapter.web.user.dto.reserval;
 
 import java.util.List;
 

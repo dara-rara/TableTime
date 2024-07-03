@@ -4,12 +4,14 @@ import com.example.TableTime.adapter.repository.ReservalRepository;
 import com.example.TableTime.adapter.repository.RestaurantRepository;
 import com.example.TableTime.adapter.repository.TableRepository;
 import com.example.TableTime.adapter.repository.UserRepository;
-import com.example.TableTime.adapter.web.adminRest.dto.reserval.ReservalRest;
 import com.example.TableTime.adapter.web.adminRest.dto.reserval.ReservalRestFreeTable;
 import com.example.TableTime.adapter.web.adminRest.dto.reserval.ReservalRestRequest;
 import com.example.TableTime.adapter.web.adminRest.dto.reserval.RestReservalAndTableForm;
-import com.example.TableTime.adapter.web.user.dto.*;
-import com.example.TableTime.domain.restaurant.ReservalEntity;
+import com.example.TableTime.adapter.web.user.dto.reserval.ReservalAndTableForm;
+import com.example.TableTime.adapter.web.user.dto.reserval.ReservalForm;
+import com.example.TableTime.adapter.web.user.dto.reserval.ReservalRequest;
+import com.example.TableTime.domain.restaurant.reserval.ReservalEntity;
+import com.example.TableTime.domain.restaurant.reserval.State;
 import com.example.TableTime.domain.user.Role;
 import com.example.TableTime.domain.user.UserEntity;
 import lombok.AccessLevel;
@@ -66,6 +68,10 @@ public class ReservalService {
         createReserval(reserval, id, user);
     }
 
+    public void createReservalUser(ReservalAndTableForm form, Long id, UserEntity user) throws ParseException {
+        createReserval(form, id, user);
+    }
+
     public void createReserval(ReservalAndTableForm form, Long id, UserEntity user) throws ParseException {
         var restaurant = restaurantRepository.getReferenceById(id);
         var table = tableRepository.findByRestaurantAndNumber(
@@ -79,10 +85,7 @@ public class ReservalService {
         reserval.setTimeEnd(LocalTime.parse(form.timeEnd()));
         var date = new SimpleDateFormat("dd.MM.yyyy").parse(form.date());
         reserval.setDate(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-//        reserval.setTimeStart(new SimpleDateFormat("HH:mm").parse(form.timeStart()));
-//        reserval.setTimeEnd(new SimpleDateFormat("HH:mm").parse(form.timeEnd()));
-//        reserval.setDate(new SimpleDateFormat("dd.MM.yyyy").parse(form.date()));
-        reserval.setState("true");
+        reserval.setState(State.TRUE);
         reserval.setMessage(form.message());
         reservalRepository.save(reserval);
     }

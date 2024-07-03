@@ -23,7 +23,7 @@ public interface TableRepository extends JpaRepository<TableEntity,Long> {
             "    SELECT r.id_tab\n" +
             "    FROM reservals_rest r\n" +
             "    WHERE r.date = :date\n" +
-            "    AND r.state = 'true'\n" +
+            "    AND r.state = 'TRUE'\n" +
             "    AND ((:time1 BETWEEN r.time_start AND r.time_end\n" +
             "    OR :time2 BETWEEN r.time_start AND r.time_end)\n" +
             "    OR (:time1 < r.time_start AND :time2 > r.time_end))\n" +

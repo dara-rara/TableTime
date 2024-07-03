@@ -3,8 +3,9 @@ package com.example.TableTime.service;
 import com.example.TableTime.adapter.repository.*;
 import com.example.TableTime.adapter.web.adminRest.dto.*;
 import com.example.TableTime.adapter.web.adminRest.dto.reserval.RestReservalForm;
-import com.example.TableTime.adapter.web.user.dto.Reserval;
+import com.example.TableTime.adapter.web.user.dto.reserval.Reserval;
 import com.example.TableTime.domain.restaurant.*;
+import com.example.TableTime.domain.restaurant.reserval.State;
 import com.example.TableTime.domain.user.UserEntity;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -127,11 +128,11 @@ public class AdminRestService {
 
         } else {
             for (var reserval : reservals) {
-                if (reserval.getState().equals("true")) {
+                if (reserval.getState().equals(State.TRUE)) {
 
                     var datetime = reserval.getDate().atTime(reserval.getTimeEnd());
                     if (currentDateTime.isAfter(datetime)) {
-                        reserval.setState("false");
+                        reserval.setState(State.FALSE);
                         reservalRepository.save(reserval);
                     }
                 }
@@ -142,7 +143,7 @@ public class AdminRestService {
                         reserval.getTable().getNumber(),
                         reserval.getPersons(),
                         reserval.getMessage(),
-                        reserval.getState());
+                        reserval.getState(), 0);
 
                 dictReserval.add(form);
             }

@@ -1,5 +1,6 @@
 package com.example.TableTime.adapter.web.adminRest.dto;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public record RestaurantData(Long id,
@@ -13,5 +14,7 @@ public record RestaurantData(Long id,
                              String tables,
                              List<String> photosRest,
                              String plan,
-                             String menu){
+                             String menu,
+                             LinkedList<ReviewData> reviewData,
+                             Integer avgRating){
 }

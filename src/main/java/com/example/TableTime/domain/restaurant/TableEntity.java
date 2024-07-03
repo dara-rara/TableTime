@@ -30,7 +30,4 @@ public class TableEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_rest", nullable = false)
     private RestaurantEntity restaurant;
-
-//    @OneToMany(mappedBy = "table", cascade = CascadeType.REMOVE)
-//    private List<TableReservalRelation> tables;
 }

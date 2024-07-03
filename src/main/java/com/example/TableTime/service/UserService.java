@@ -1,9 +1,13 @@
 package com.example.TableTime.service;
 
 import com.example.TableTime.adapter.repository.ReservalRepository;
+import com.example.TableTime.adapter.repository.ReviewRepository;
 import com.example.TableTime.adapter.repository.UserRepository;
 import com.example.TableTime.adapter.web.auth.dto.RegistrationRequest;
 import com.example.TableTime.adapter.web.user.dto.*;
+import com.example.TableTime.adapter.web.user.dto.reserval.Reserval;
+import com.example.TableTime.adapter.web.user.dto.reserval.UserReservalForm;
+import com.example.TableTime.domain.restaurant.reserval.State;
 import com.example.TableTime.domain.user.Role;
 import com.example.TableTime.domain.user.UserEntity;
 import lombok.AccessLevel;
@@ -25,9 +29,10 @@ import java.util.*;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class UserService implements UserDetailsService{
 
-    private  final UserRepository userRepository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final ReservalRepository reservalRepository;
+    private final ReviewRepository reviewRepository;
 
     public UserEntity saveUser(RegistrationRequest registrationRequest) {
         if (userExists(registrationRequest.email(), registrationRequest.username())) {
@@ -61,6 +66,7 @@ public class UserService implements UserDetailsService{
 
     public UserReservalForm getUserInfoReserval(UserEntity user) {
         var reservals = reservalRepository.findByUserOrderByDate(user);
+        var grade = 0;
         LocalDateTime currentDateTime = LocalDateTime.now();
         var dictReserval = new LinkedList<Reserval>();
         if (reservals.isEmpty()) {
@@ -68,22 +74,33 @@ public class UserService implements UserDetailsService{
         }
         else {
             for (var reserval : reservals) {
-                if (reserval.getState().equals("true")) {
+                if (reserval.getState().equals(State.TRUE)) {
 
                     var datetime = reserval.getDate().atTime(reserval.getTimeEnd());
                     if (currentDateTime.isAfter(datetime)) {
-                        reserval.setState("false");
+                        reserval.setState(State.FALSE);
                         reservalRepository.save(reserval);
                     }
                 }
                 var rest = reserval.getRestaurant();
+
+                if (reserval.getState().equals(State.RATED)) {
+                    var review = reviewRepository.findByReserval(reserval);
+                    if (review.isPresent()) {
+                        grade = review.get().getGrade();
+                    }
+                }
+                else {
+                    grade = 0;
+                }
+
                 var form = new Reserval(reserval.getId_res(), rest.getName(), rest.getPhone(),
                         DateTimeFormatter.ofPattern("dd.MM.YYYY").format(reserval.getDate()),
                         DateTimeFormatter.ofPattern("HH:mm").format(reserval.getTimeStart()),
                         reserval.getTable().getNumber(),
                         reserval.getPersons(),
                         reserval.getMessage(),
-                        reserval.getState());
+                        reserval.getState(), grade);
 
                 dictReserval.add(form);
             }

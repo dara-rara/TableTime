@@ -1,6 +1,6 @@
 package com.example.TableTime.adapter.repository;
 
-import com.example.TableTime.domain.restaurant.ReservalEntity;
+import com.example.TableTime.domain.restaurant.reserval.ReservalEntity;
 import com.example.TableTime.domain.restaurant.RestaurantEntity;
 import com.example.TableTime.domain.user.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

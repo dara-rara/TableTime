@@ -1,5 +1,7 @@
-package com.example.TableTime.domain.restaurant;
+package com.example.TableTime.domain.restaurant.reserval;
 
+import com.example.TableTime.domain.restaurant.RestaurantEntity;
+import com.example.TableTime.domain.restaurant.TableEntity;
 import com.example.TableTime.domain.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -54,8 +56,9 @@ public class ReservalEntity {
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "state", nullable = false)
-    private String state;
+    private State state;
 
     @Column(name = "message", nullable = true)
     private String message;

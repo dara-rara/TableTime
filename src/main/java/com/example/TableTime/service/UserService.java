@@ -5,7 +5,8 @@ import com.example.TableTime.adapter.repository.ReviewRepository;
 import com.example.TableTime.adapter.repository.UserRepository;
 import com.example.TableTime.adapter.web.auth.dto.RegistrationRequest;
 import com.example.TableTime.adapter.web.user.dto.*;
-import com.example.TableTime.adapter.web.user.dto.reserval.Reserval;
+import com.example.TableTime.adapter.web.adminRest.dto.reserval.Reserval;
+import com.example.TableTime.adapter.web.user.dto.reserval.ReservalAndReview;
 import com.example.TableTime.adapter.web.user.dto.reserval.UserReservalForm;
 import com.example.TableTime.domain.restaurant.reserval.State;
 import com.example.TableTime.domain.user.Role;
@@ -67,8 +68,9 @@ public class UserService implements UserDetailsService{
     public UserReservalForm getUserInfoReserval(UserEntity user) {
         var reservals = reservalRepository.findByUserOrderByDate(user);
         var grade = 0;
+        String textReview = null;
         LocalDateTime currentDateTime = LocalDateTime.now();
-        var dictReserval = new LinkedList<Reserval>();
+        var dictReserval = new LinkedList<ReservalAndReview>();
         if (reservals.isEmpty()) {
 
         }
@@ -88,19 +90,21 @@ public class UserService implements UserDetailsService{
                     var review = reviewRepository.findByReserval(reserval);
                     if (review.isPresent()) {
                         grade = review.get().getGrade();
+                        textReview = review.get().getText();
                     }
                 }
                 else {
                     grade = 0;
+                    textReview = null;
                 }
 
-                var form = new Reserval(reserval.getId_res(), rest.getName(), rest.getPhone(),
+                var form = new ReservalAndReview(reserval.getId_res(), rest.getName(), rest.getPhone(),
                         DateTimeFormatter.ofPattern("dd.MM.YYYY").format(reserval.getDate()),
                         DateTimeFormatter.ofPattern("HH:mm").format(reserval.getTimeStart()),
                         reserval.getTable().getNumber(),
                         reserval.getPersons(),
                         reserval.getMessage(),
-                        reserval.getState(), grade);
+                        reserval.getState(), grade, textReview);
 
                 dictReserval.add(form);
             }

@@ -50,6 +50,12 @@ public class RestaurantService {
             restContext.setAddress(value.getAddress());
             restContext.setPhone(value.getPhone());
             restContext.setPhoto(value.getPhotoRest().getPhotoOne());
+            if (reviewRepository.findByRestaurant(value).isEmpty()) {
+                restContext.setGrade(0);
+            }
+            else {
+                restContext.setGrade(Math.round(reviewRepository.findAvgGrade(value.getId_rest())));
+            }
             list.add(restContext);
         }
         return list;

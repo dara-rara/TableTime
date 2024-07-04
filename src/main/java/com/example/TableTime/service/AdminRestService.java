@@ -3,7 +3,7 @@ package com.example.TableTime.service;
 import com.example.TableTime.adapter.repository.*;
 import com.example.TableTime.adapter.web.adminRest.dto.*;
 import com.example.TableTime.adapter.web.adminRest.dto.reserval.RestReservalForm;
-import com.example.TableTime.adapter.web.user.dto.reserval.Reserval;
+import com.example.TableTime.adapter.web.adminRest.dto.reserval.Reserval;
 import com.example.TableTime.domain.restaurant.*;
 import com.example.TableTime.domain.restaurant.reserval.State;
 import com.example.TableTime.domain.user.UserEntity;
@@ -143,7 +143,7 @@ public class AdminRestService {
                         reserval.getTable().getNumber(),
                         reserval.getPersons(),
                         reserval.getMessage(),
-                        reserval.getState(), 0);
+                        reserval.getState());
 
                 dictReserval.add(form);
             }

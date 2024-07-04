@@ -74,6 +74,14 @@ public class RestaurantService {
                 list.add(form);
             }
         }
+        var grade = 0;
+        if (reviewRepository.findByRestaurant(restaurant).isEmpty()) {
+            grade = 0;
+        }
+        else {
+            grade = Math.round(reviewRepository.findAvgGrade(restaurant.getId_rest()));
+        }
+
         var data = new RestaurantData(
                 restaurant.getId_rest(),
                 restaurant.getName(),
@@ -88,7 +96,7 @@ public class RestaurantService {
                 restaurant.getPlan().getPhoto(),
                 restaurant.getMenu().getPhoto(),
                 list,
-                Math.round(reviewRepository.findAvgGrade(restaurant.getId_rest()))
+                grade
         );
         return data;
     }

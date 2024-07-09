@@ -75,7 +75,7 @@ public class RestaurantService {
         var list = new LinkedList<ReviewData>();
         if (!reviews.isEmpty()) {
             for (var review : reviews) {
-                var form = new ReviewData(review.getUser().getUsername(),
+                var form = new ReviewData(review.getId_rev(), review.getUser().getUsername(),
                         review.getText(), review.getGrade());
                 list.add(form);
             }

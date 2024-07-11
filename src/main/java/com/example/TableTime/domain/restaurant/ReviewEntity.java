@@ -35,7 +35,7 @@ public class ReviewEntity {
     @JoinColumn(name = "id_res")
     private ReservalEntity reserval;
 
-    @Column(name = "text", nullable = true)
+    @Column(name = "text", nullable = true, length = 400)
     private String text;
 
     @Column(name = "grade", nullable = false)

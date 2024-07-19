@@ -2,14 +2,16 @@ package com.example.TableTime.adapter.web.adminRest;
 
 import com.example.TableTime.adapter.web.adminRest.dto.*;
 import com.example.TableTime.adapter.web.adminRest.dto.reserval.*;
+import com.example.TableTime.adapter.web.auth.dto.MessageResponse;
 import com.example.TableTime.domain.user.UserEntity;
 import com.example.TableTime.service.AdminRestService;
 import com.example.TableTime.service.ReservalService;
 import com.example.TableTime.service.RestaurantService;
+import com.example.TableTime.service.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.Delegate;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -27,66 +29,102 @@ public class AdminRestController {
     private final AdminRestService adminRestService;
     private final RestaurantService restaurantService;
     private final ReservalService reservalService;
+    private final UserService userService;
 
     @GetMapping("/restaurant")
-    public RestaurantData getRestaurant(@AuthenticationPrincipal UserEntity user) {
-        return restaurantService.getFormRestaurant(adminRestService.getRestaurant(user));
+    public ResponseEntity<?> getRestaurant(@AuthenticationPrincipal UserEntity user) {
+        if (!restaurantService.existUserRest(user)) return ResponseEntity.badRequest()
+                .body(new MessageResponse("Ресторан не существует!"));
+        return ResponseEntity.ok(restaurantService.getFormRestaurant( restaurantService.getRestaurant(user)));
     }
 
     @PostMapping("/updateRestaurant")
-    public RestaurantInfo updateRestaurant(@AuthenticationPrincipal UserEntity user,
+    public ResponseEntity<?>  updateRestaurant(@AuthenticationPrincipal UserEntity user,
                                            @RequestBody RestaurantInfo form) {
+        if (!restaurantService.existUserRest(user)) return ResponseEntity.badRequest()
+                .body(new MessageResponse("Ресторан не существует!"));
         adminRestService.updateRestaurant(user, form);
-        return form;
+        return ResponseEntity.ok(form);
     }
 
     @PostMapping("/updateMenu")
-    public void updateMenu(@AuthenticationPrincipal UserEntity user, @RequestBody PhotoMenuOrPlan photo) {
+    public ResponseEntity<?>  updateMenu(@AuthenticationPrincipal UserEntity user, @RequestBody PhotoMenuOrPlan photo) {
+        if (!restaurantService.existUserRest(user)) return ResponseEntity.badRequest()
+                .body(new MessageResponse("Ресторан не существует!"));
         adminRestService.updateMenu(user, photo.photo());
+        return ResponseEntity.ok(new MessageResponse("Данные изменены!"));
     }
 
     @PostMapping("/updateTable")
-    public void updateTable(@AuthenticationPrincipal UserEntity user, @RequestBody TablesForm form) {
+    public ResponseEntity<?>  updateTable(@AuthenticationPrincipal UserEntity user, @RequestBody TablesForm form) {
+        if (!restaurantService.existUserRest(user)) return ResponseEntity.badRequest()
+                .body(new MessageResponse("Ресторан не существует!"));
         adminRestService.updateTables(user, form);
+        return ResponseEntity.ok(new MessageResponse("Данные изменены!"));
     }
 
     @PostMapping("/updatePlan")
-    public void updatePlan(@AuthenticationPrincipal UserEntity user, @RequestBody PhotoMenuOrPlan photo) {
+    public ResponseEntity<?>  updatePlan(@AuthenticationPrincipal UserEntity user, @RequestBody PhotoMenuOrPlan photo) {
+        if (!restaurantService.existUserRest(user)) return ResponseEntity.badRequest()
+                .body(new MessageResponse("Ресторан не существует!"));
         adminRestService.updatePlan(user, photo.photo());
+        return ResponseEntity.ok(new MessageResponse("Данные изменены!"));
     }
 
     @PostMapping("/updatePhotoRestaurant")
-    public void updatePhotoRest(@AuthenticationPrincipal UserEntity user, @RequestBody PhotoRest photo) {
+    public ResponseEntity<?>  updatePhotoRest(@AuthenticationPrincipal UserEntity user, @RequestBody PhotoRest photo) {
+        if (!restaurantService.existUserRest(user)) return ResponseEntity.badRequest()
+                .body(new MessageResponse("Ресторан не существует!"));
         adminRestService.updatePhotoRest(user, photo.photo1(), photo.photo2(), photo.photo3());
+        return ResponseEntity.ok(new MessageResponse("Данные изменены!"));
     }
 
     @PostMapping("/userUpdate")
-    public void updateUser(@AuthenticationPrincipal UserEntity user, @RequestBody AccountRestUpdate accountRequest) {
+    public ResponseEntity<?>  updateUser(@AuthenticationPrincipal UserEntity user, @RequestBody AccountRestUpdate accountRequest) {
+        if (!user.getUsername().equals(accountRequest.getUsername())
+                && userService.nameExists(accountRequest.getUsername())) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Такой логин уже существует!"));
+        }
+        if (!user.getEmail().equals(accountRequest.getEmail())
+                && userService.emailExists(accountRequest.getEmail())) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Такой email уже существует!"));
+        }
         adminRestService.updateUser(user, accountRequest);
+        return ResponseEntity.ok(new MessageResponse("Данные изменены!"));
     }
 
     @PostMapping("/getReservals")
-    public RestReservalForm getReservals(@AuthenticationPrincipal UserEntity user, @RequestBody RestDateRequest request) throws ParseException {
-        return adminRestService.getRestInfoReserval(user, request);
+    public ResponseEntity<?>  getReservals(@AuthenticationPrincipal UserEntity user, @RequestBody RestDateRequest request) throws ParseException {
+        if (!restaurantService.existUserRest(user)) return ResponseEntity.badRequest()
+                .body(new MessageResponse("Ресторан не существует!"));
+        return  ResponseEntity.ok(adminRestService.getRestInfoReserval(user, request));
     }
 
     @DeleteMapping("/cancelReserval/{id}")
-    public void cancelReservalRest(@PathVariable Long id, @AuthenticationPrincipal UserEntity user) throws ParseException {
-        reservalService.cancelReserval(id);
+    public ResponseEntity<?>  cancelReservalRest(@PathVariable Long id, @AuthenticationPrincipal UserEntity user) throws ParseException {
+        if (reservalService.cancelReserval(id))
+            return ResponseEntity.ok().body(new MessageResponse("Изменения сохранены!"));
+        return ResponseEntity.badRequest().body(new MessageResponse("Данной брони не существует!"));
     }
 
     @PostMapping("/freeTable")
-    public ReservalRestRequest listFreeTable(@AuthenticationPrincipal UserEntity user, @RequestBody ReservalRestFreeTable form) throws ParseException {
-        var id = adminRestService.getRestaurant(user).getId_rest();
-        return reservalService.getFreeTablesRest(form, id);
+    public ResponseEntity<?> listFreeTable(@AuthenticationPrincipal UserEntity user,
+                                           @RequestBody ReservalRestFreeTable form) throws ParseException {
+        if (!restaurantService.existUserRest(user)) return ResponseEntity.badRequest()
+                .body(new MessageResponse("Ресторан не существует!"));
+        return ResponseEntity.ok(reservalService.getFreeTablesRest(form,
+                restaurantService.getRestaurant(user).getId_rest()));
     }
 
     @PostMapping("/reserval")
-    public void createReserval(@RequestBody RestReservalAndTableForm form,
+    public ResponseEntity<?> createReserval(@RequestBody RestReservalAndTableForm form,
                                @AuthenticationPrincipal UserEntity user) throws ParseException {
-        var id = adminRestService.getRestaurant(user).getId_rest();
+        if (!restaurantService.existUserRest(user)) return ResponseEntity.badRequest()
+                .body(new MessageResponse("Ресторан не существует!"));
 
-        reservalService.createReservalRest(form, id,
-                reservalService.createUnregistUser(form.name(), form.phone()));
+        if (!reservalService.createReservalRest(form,  restaurantService.getRestaurant(user).getId_rest(),
+                reservalService.createUnregistUser(form.name(), form.phone())))
+            return ResponseEntity.badRequest().body(new MessageResponse("Стол уже занят!"));
+        return ResponseEntity.ok(new MessageResponse("Бронь создана!"));
     }
 }

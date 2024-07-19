@@ -20,9 +20,11 @@ public class ReviewService {
     private final ReservalRepository reservalRepository;
     private final ReviewRepository reviewRepository;
 
-    public void createReview (ReviewForm reviewForm) {
+    public boolean createReview (ReviewForm reviewForm) {
         var review = new ReviewEntity();
-        var reserval = reservalRepository.getReferenceById(reviewForm.idReserval());
+        var reservalOpt = reservalRepository.findById(reviewForm.idReserval());
+        if (reservalOpt.isEmpty()) return false;
+        var reserval = reservalOpt.get();
         reserval.setState(State.RATED);
         review.setReserval(reserval);
         review.setUser(reserval.getUser());
@@ -30,5 +32,6 @@ public class ReviewService {
         review.setText(reviewForm.text());
         review.setGrade(reviewForm.grade());
         reviewRepository.save(review);
+        return true;
     }
 }

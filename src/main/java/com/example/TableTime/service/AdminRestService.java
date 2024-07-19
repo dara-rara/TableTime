@@ -39,16 +39,11 @@ public class AdminRestService {
     private final UserRepository userRepository;
     private final ReservalRepository reservalRepository;
 
-    public RestaurantEntity getRestaurant(UserEntity user) {
-        var restaurant = restaurantRepository.findByUser(user);
-        if (restaurant.isEmpty()) throw new UsernameNotFoundException("Пользователь не администратор ресторана");
-        return restaurant.get();
-    }
 
 
     public void updatePhotoRest(UserEntity user, String photo1, String photo2,
                                 String photo3) {
-        var photos = getRestaurant(user).getPhotoRest();
+        var photos = restaurantService.getRestaurant(user).getPhotoRest();
         photos.setPhotoOne(photo1);
         photos.setPhotoTwo(photo2);
         photos.setPhotoThree(photo3);
@@ -56,13 +51,13 @@ public class AdminRestService {
     }
 
     public void updatePlan(UserEntity user, String photo) {
-        var plan = getRestaurant(user).getPlan();
+        var plan = restaurantService.getRestaurant(user).getPlan();
         plan.setPhoto(photo);
         photoPlanRepository.save(plan);
     }
 
     public void updateMenu(UserEntity user, String photo) {
-        var menu = getRestaurant(user).getMenu();
+        var menu = restaurantService.getRestaurant(user).getMenu();
         menu.setPhoto(photo);
         photoMenuRepository.save(menu);
     }
@@ -70,7 +65,7 @@ public class AdminRestService {
     public void updateRestaurant(UserEntity user, RestaurantInfo form) {
         restaurantService.existTown(form.town());
 
-        var restaurant = getRestaurant(user);
+        var restaurant = restaurantService.getRestaurant(user);
         restaurant.setName(form.name());
         restaurant.setTown(townRepository.findByName(form.town()).get());
         restaurant.setAddress(form.address());
@@ -83,7 +78,7 @@ public class AdminRestService {
     }
 
     public void updateTables(UserEntity user, TablesForm form) {
-        var restaurant = getRestaurant(user);
+        var restaurant = restaurantService.getRestaurant(user);
         var count = form.table();
         if (count != 0 && restaurant.getTables() == 0) {
             for (var i = 1; i <= count; i++) {
@@ -98,16 +93,6 @@ public class AdminRestService {
     }
 
     public AccountRestUpdate updateUser (UserEntity user, AccountRestUpdate accountRestUpdate) {
-        //нужна оброботка этих двух if-ов
-        if (!user.getUsername().equals(accountRestUpdate.getUsername())
-                && userRepository.existsByUsername(accountRestUpdate.getUsername())) {
-            return accountRestUpdate;
-        }
-        if (!user.getEmail().equals(accountRestUpdate.getEmail())
-                && userRepository.existsByEmail(accountRestUpdate.getEmail())) {
-            return accountRestUpdate;
-        }
-
         user.setUsername(accountRestUpdate.getUsername());
         user.setPhone(accountRestUpdate.getPhone());
         user.setEmail(accountRestUpdate.getEmail());

@@ -19,4 +19,5 @@ public interface ReservalRepository extends JpaRepository<ReservalEntity,Long> {
                                                                  LocalDate date);
 
     Optional<ReservalEntity> findByUserAndDateAndTimeStart(UserEntity user, LocalDate date, LocalTime time);
+    Optional<ReservalEntity> findById(Long id);
 }

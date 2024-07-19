@@ -3,6 +3,7 @@ package com.example.TableTime.service;
 import com.example.TableTime.adapter.repository.ReservalRepository;
 import com.example.TableTime.adapter.repository.ReviewRepository;
 import com.example.TableTime.adapter.repository.UserRepository;
+import com.example.TableTime.adapter.web.auth.dto.LoginUser;
 import com.example.TableTime.adapter.web.auth.dto.RegistrationRequest;
 import com.example.TableTime.adapter.web.user.dto.*;
 import com.example.TableTime.adapter.web.adminRest.dto.reserval.Reserval;
@@ -51,6 +52,13 @@ public class UserService implements UserDetailsService{
 
     public boolean userExists(String email, String username) {
         return userRepository.existsByEmail(email) || userRepository.existsByUsername(username) || username.startsWith("client");
+    }
+
+    public boolean nameExists(String username) {
+        return userRepository.existsByUsername(username) || username.startsWith("client");
+    }
+    public boolean emailExists(String email) {
+        return userRepository.existsByEmail(email);
     }
 
     public UserEntity getByUsername(String username) {
@@ -113,23 +121,12 @@ public class UserService implements UserDetailsService{
                 user.getEmail(), user.getPhone(), dictReserval);
     }
 
-    public AccountUpdate updateUser (UserEntity user, AccountUpdate account) {
-        //нужна оброботка этих двух if-ов
-        if (!user.getUsername().equals(account.getUsername())
-                && userRepository.existsByUsername(account.getUsername())) {
-            return account;
-        }
-        if (!user.getEmail().equals(account.getEmail())
-                && userRepository.existsByEmail(account.getEmail())) {
-            return account;
-        }
-
+    public void updateUser (UserEntity user, AccountUpdate account) {
         user.setUsername(account.getUsername());
         user.setRealname(account.getRealname());
         user.setPhone(account.getPhone());
         user.setEmail(account.getEmail());
         userRepository.save(user);
-        return account;
     }
 
     @Override

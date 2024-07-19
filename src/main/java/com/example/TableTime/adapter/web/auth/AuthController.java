@@ -7,22 +7,19 @@ import com.example.TableTime.adapter.web.auth.dto.RestaurantList;
 import com.example.TableTime.domain.user.UserEntity;
 import com.example.TableTime.service.AuthService;
 import com.example.TableTime.service.RestaurantService;
-import jakarta.validation.Valid;
+import com.example.TableTime.service.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
-//@CrossOrigin(origins = "http://10.76.45.18:5173")
-@Validated
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -30,7 +27,6 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 public class AuthController {
     private final AuthService authService;
     private final UserRepository userRepository;
-
     private final RestaurantService restaurantService;
 
     @GetMapping("/restaurants")
@@ -39,26 +35,40 @@ public class AuthController {
     }
 
     @GetMapping("/restaurants/{id}")
-    public RestaurantData getRest(@PathVariable Long id) {
-        return restaurantService.getFormRestaurant(restaurantService.findId(id));
+    public ResponseEntity<?> getRest(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(restaurantService.getFormRestaurant(restaurantService.findId(id).get()));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(new MessageResponse("Ресторан не существует!"));
+        }
     }
 
     @PostMapping("/users")
     public ResponseEntity<?> signUp(@RequestBody RegistrationRequest request) {
         if (userRepository.existsByUsername(request.username())) {
             return ResponseEntity.badRequest()
-                    .body(new MessageResponse("Error: Username is already taken!"));
+                    .body(new MessageResponse("Такой логин уже существует!"));
         }
         if (userRepository.existsByEmail(request.email())) {
             return ResponseEntity.badRequest()
-                    .body(new MessageResponse("Error: Email is already in use!"));
+                    .body(new MessageResponse("Такой email уже существует!"));
         }
         return ResponseEntity.ok(authService.signUp(request));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> signIn(@Valid @RequestBody LoginUser request) {
-        return ResponseEntity.ok(authService.signIn(request));
+    public ResponseEntity<?> signIn(@RequestBody LoginUser request) {
+        try {
+            if (!userRepository.existsByUsername(request.getUsername())) {
+                return ResponseEntity.badRequest()
+                        .body(new MessageResponse("Такого логина не существует!"));
+            }
+            return ResponseEntity.ok(authService.signIn(request));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(new MessageResponse("Неправильно набран пароль!"));
+        }
     }
 
     @GetMapping("/status")

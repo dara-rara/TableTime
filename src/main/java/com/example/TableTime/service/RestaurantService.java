@@ -21,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -34,8 +35,18 @@ public class RestaurantService {
     private final PhotoRestaurantRepository photoRestaurantRepository;
     private final ReviewRepository reviewRepository;
 
-    public RestaurantEntity findId (Long id) {
-        return restaurantRepository.findById(id).get();
+    public Optional<RestaurantEntity> findId (Long id) {
+        return restaurantRepository.findById(id);
+    }
+
+    public RestaurantEntity getRestaurant(UserEntity user) {
+        var restaurant = restaurantRepository.findByUser(user);
+        if (restaurant.isEmpty()) throw new UsernameNotFoundException("Пользователь не администратор ресторана");
+        return restaurant.get();
+    }
+
+    public boolean existUserRest(UserEntity user) {
+        return restaurantRepository.existsByUser(user);
     }
 
     public List<RestaurantList> listRest () {

@@ -1,5 +1,7 @@
-package com.example.TableTime.domain.restaurant;
+package com.example.TableTime.domain.restaurant.reserval;
 
+import com.example.TableTime.domain.restaurant.RestaurantEntity;
+import com.example.TableTime.domain.restaurant.reserval.State;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,4 +32,8 @@ public class TableEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_rest", nullable = false)
     private RestaurantEntity restaurant;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "state", nullable = false)
+    private State state;
 }

@@ -6,11 +6,11 @@ import com.example.TableTime.adapter.web.adminRest.dto.reserval.RestReservalForm
 import com.example.TableTime.adapter.web.adminRest.dto.reserval.Reserval;
 import com.example.TableTime.domain.restaurant.*;
 import com.example.TableTime.domain.restaurant.reserval.State;
+import com.example.TableTime.domain.restaurant.reserval.TableEntity;
 import com.example.TableTime.domain.user.UserEntity;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -79,16 +79,40 @@ public class AdminRestService {
 
     public void updateTables(UserEntity user, TablesForm form) {
         var restaurant = restaurantService.getRestaurant(user);
-        var count = form.table();
-        if (count != 0 && restaurant.getTables() == 0) {
-            for (var i = 1; i <= count; i++) {
+        var countForm = form.table();
+        var countTable = restaurant.getTables();
+        if (countForm != 0 && countTable == 0) {
+            for (var i = 1; i <= countForm; i++) {
                 var table = new TableEntity();
                 table.setRestaurant(restaurant);
                 table.setNumber(i);
+                table.setState(State.TRUE);
+                tableRepository.save(table);
+            }
+
+        } else if (countForm != 0 && countTable != 0 && countForm > countTable) {
+            for (var i = countTable + 1; i <= countForm; i++) {
+                var table = new TableEntity();
+                table.setRestaurant(restaurant);
+                table.setNumber(i);
+                table.setState(State.TRUE);
+                tableRepository.save(table);
+            }
+        } else if (countForm != 0 && countTable != 0 && countForm < countTable) {
+            for (var i = countForm + 1; i <= countTable; i++) {
+                var table = tableRepository.findByRestaurantAndNumberAndState(
+                        restaurant, i, State.TRUE);
+                var reservals = reservalRepository.findByTableAndState(table, State.TRUE);
+                if (!reservals.isEmpty()) {
+                    for (var reserval : reservals) {
+                        reservalRepository.delete(reserval);
+                    }
+                }
+                table.setState(State.FALSE);
                 tableRepository.save(table);
             }
         }
-        restaurant.setTables(count);
+        restaurant.setTables(countForm);
         restaurantRepository.save(restaurant);
     }
 
@@ -141,6 +165,4 @@ public class AdminRestService {
         if (restaurant.isEmpty()) throw new RuntimeException("Пользователь не админ ресторана");//переделать!
         return restaurant.get();
     }
-
-
 }

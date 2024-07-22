@@ -1,7 +1,6 @@
 package com.example.TableTime.domain.restaurant.reserval;
 
 import com.example.TableTime.domain.restaurant.RestaurantEntity;
-import com.example.TableTime.domain.restaurant.TableEntity;
 import com.example.TableTime.domain.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -12,7 +11,6 @@ import lombok.experimental.FieldNameConstants;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
 
 import static lombok.AccessLevel.PRIVATE;
 

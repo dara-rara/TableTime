@@ -86,8 +86,8 @@ public class ReservalService {
         var restaurant = restaurantRepository.getReferenceById(id);
         var resTables = getFreeTables(id, form.date(), form.timeStart(), form.timeEnd());
         if (checkTable(form.table(), resTables)) {
-            var table = tableRepository.findByRestaurantAndNumber(
-                    restaurant, form.table());
+            var table = tableRepository.findByRestaurantAndNumberAndState(
+                    restaurant, form.table(), State.TRUE);
             var reserval = new ReservalEntity();
             reserval.setUser(user);
             reserval.setRestaurant(restaurant);

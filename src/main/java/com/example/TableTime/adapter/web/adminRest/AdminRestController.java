@@ -1,13 +1,11 @@
 package com.example.TableTime.adapter.web.adminRest;
 
 import com.example.TableTime.adapter.web.adminRest.dto.*;
+import com.example.TableTime.adapter.web.adminRest.dto.promotion.FormPromotion;
 import com.example.TableTime.adapter.web.adminRest.dto.reserval.*;
 import com.example.TableTime.adapter.web.auth.dto.MessageResponse;
 import com.example.TableTime.domain.user.UserEntity;
-import com.example.TableTime.service.AdminRestService;
-import com.example.TableTime.service.ReservalService;
-import com.example.TableTime.service.RestaurantService;
-import com.example.TableTime.service.UserService;
+import com.example.TableTime.service.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -30,6 +28,7 @@ public class AdminRestController {
     private final RestaurantService restaurantService;
     private final ReservalService reservalService;
     private final UserService userService;
+    private final PromotionService promotionService;
 
     @GetMapping("/restaurant")
     public ResponseEntity<?> getRestaurant(@AuthenticationPrincipal UserEntity user) {
@@ -98,6 +97,29 @@ public class AdminRestController {
         if (!restaurantService.existUserRest(user)) return ResponseEntity.badRequest()
                 .body(new MessageResponse("Ресторан не существует!"));
         return  ResponseEntity.ok(adminRestService.getRestInfoReserval(user, request));
+    }
+
+    @GetMapping("/getPromotions")
+    public ResponseEntity<?>  getPromotions(@AuthenticationPrincipal UserEntity user) {
+        if (!restaurantService.existUserRest(user)) return ResponseEntity.badRequest()
+                .body(new MessageResponse("Ресторан не существует!"));
+        return  ResponseEntity.ok(promotionService.getPromotions(restaurantService.getRestaurant(user)));
+    }
+
+    @PostMapping("/promotion")
+    public ResponseEntity<?> createPromotion(@AuthenticationPrincipal UserEntity user, @RequestBody FormPromotion formPromotion) {
+        if (!restaurantService.existUserRest(user)) return ResponseEntity.badRequest()
+                .body(new MessageResponse("Ресторан не существует!"));
+        promotionService.createPromotion(user, formPromotion);
+        return  ResponseEntity.ok(new MessageResponse("Акция создана!"));
+    }
+
+    @PostMapping("/updatePromotion/{id}")
+    public ResponseEntity<?> updatePromotion(@PathVariable Long id, @RequestBody FormPromotion formPromotion) {
+        if (!promotionService.checkPromotions(id)) return ResponseEntity.badRequest()
+                .body(new MessageResponse("Акция не существует!"));
+        promotionService.updatePromotion(formPromotion, id);
+        return  ResponseEntity.ok(new MessageResponse("Изменения сохранены!"));
     }
 
     @DeleteMapping("/cancelReserval/{id}")

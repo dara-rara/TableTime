@@ -34,6 +34,7 @@ public class RestaurantService {
     private final PhotoPlanRepository photoPlanRepository;
     private final PhotoRestaurantRepository photoRestaurantRepository;
     private final ReviewRepository reviewRepository;
+    private final PromotionService promotionService;
 
     public Optional<RestaurantEntity> findId (Long id) {
         return restaurantRepository.findById(id);
@@ -113,12 +114,14 @@ public class RestaurantService {
                 restaurant.getPlan().getPhoto(),
                 restaurant.getMenu().getPhoto(),
                 list,
+                promotionService.getPromotions(restaurant),
                 grade
         );
         return data;
     }
 
     public void createRestaurant (UserEntity user){
+        //поменять ошибку
         if (restaurantRepository.existsByUser(user))
             throw new UsernameNotFoundException("Пользователь ужя является администратором ресторана");
 

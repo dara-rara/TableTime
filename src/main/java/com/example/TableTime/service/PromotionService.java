@@ -15,7 +15,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -65,5 +64,12 @@ public class PromotionService {
 
     public boolean checkPromotions (Long id) {
         return promotionRepository.existsById(id);
+    }
+
+    public boolean cancelPromotion(Long id) {
+        var promotion = promotionRepository.findById(id);
+        if (promotion.isEmpty()) return false;
+        promotionRepository.delete(promotion.get());
+        return true;
     }
 }

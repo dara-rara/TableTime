@@ -122,8 +122,15 @@ public class AdminRestController {
         return  ResponseEntity.ok(new MessageResponse("Изменения сохранены!"));
     }
 
+    @DeleteMapping("/cancelPromotion/{id}")
+    public ResponseEntity<?> cancelPromotion(@PathVariable Long id) {
+        if (promotionService.cancelPromotion(id))
+            return ResponseEntity.ok().body(new MessageResponse("Изменения сохранены!"));
+        return ResponseEntity.badRequest().body(new MessageResponse("Данной брони не существует!"));
+    }
+
     @DeleteMapping("/cancelReserval/{id}")
-    public ResponseEntity<?>  cancelReservalRest(@PathVariable Long id, @AuthenticationPrincipal UserEntity user) throws ParseException {
+    public ResponseEntity<?>  cancelReservalRest(@PathVariable Long id) {
         if (reservalService.cancelReserval(id))
             return ResponseEntity.ok().body(new MessageResponse("Изменения сохранены!"));
         return ResponseEntity.badRequest().body(new MessageResponse("Данной брони не существует!"));

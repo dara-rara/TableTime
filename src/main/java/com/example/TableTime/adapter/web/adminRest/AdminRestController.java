@@ -114,6 +114,15 @@ public class AdminRestController {
         return  ResponseEntity.ok(new MessageResponse("Акция создана!"));
     }
 
+    @GetMapping("/promotion/{id}")
+    public ResponseEntity<?> getPromotion(@AuthenticationPrincipal UserEntity user, @PathVariable Long id) {
+        if (!restaurantService.existUserRest(user)) return ResponseEntity.badRequest()
+                .body(new MessageResponse("Ресторан не существует!"));
+        if (!promotionService.checkPromotions(id)) return ResponseEntity.badRequest()
+                .body(new MessageResponse("Акция не существует!"));
+        return  ResponseEntity.ok(promotionService.getPromotion(id));
+    }
+
     @PostMapping("/updatePromotion/{id}")
     public ResponseEntity<?> updatePromotion(@PathVariable Long id, @RequestBody FormPromotion formPromotion) {
         if (!promotionService.checkPromotions(id)) return ResponseEntity.badRequest()

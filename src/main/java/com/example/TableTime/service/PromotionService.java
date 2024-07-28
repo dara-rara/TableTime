@@ -66,6 +66,11 @@ public class PromotionService {
         return promotionRepository.existsById(id);
     }
 
+    public FormPromotion getPromotion (Long id) {
+        var promotion = promotionRepository.findById(id).get();
+        return new FormPromotion(promotion.getName(), promotion.getDescription(), promotion.getPhoto());
+    }
+
     public boolean cancelPromotion(Long id) {
         var promotion = promotionRepository.findById(id);
         if (promotion.isEmpty()) return false;

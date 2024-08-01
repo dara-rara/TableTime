@@ -24,4 +24,6 @@ public interface ReservalRepository extends JpaRepository<ReservalEntity,Long> {
     Optional<ReservalEntity> findById(Long id);
 
     List<ReservalEntity> findByTableAndState(TableEntity table, State state);
+
+    long deleteByRestaurant (RestaurantEntity restaurant);
 }

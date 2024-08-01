@@ -38,15 +38,15 @@ public class RestaurantEntity {
     @JoinColumn(name = "id_user")
     private UserEntity user;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_menu")
     private PhotoMenuEntity menu;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_plan")
     private PhotoPlanEntity plan;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_photo_rest")
     private PhotoRestaurantEntity photoRest;
 

@@ -15,4 +15,5 @@ public interface PromotionRepository extends JpaRepository<PromotionEntity,Long>
     List<PromotionEntity> findByRestaurant(RestaurantEntity restaurant);
     Optional<PromotionEntity> findById (Long id);
     boolean existsById(Long id);
+    long deleteByRestaurant (RestaurantEntity restaurant);
 }

@@ -47,8 +47,8 @@ public class AdminAppController {
         return adminAppService.getRole();
     }
 
-    @DeleteMapping("/deleteRestaurant")
-    public ResponseEntity<?>  cancelReservalRest(@RequestBody UserRequest user) {
+    @PostMapping("/deleteRestaurant")
+    public ResponseEntity<?> deleteRestaurant(@RequestBody UserRequest user) {
         if (!userService.emailExists(user.email()) || (userService.emailExists(user.email()) &&
                 !userService.checkEmailAndUsername(user.username(), user.email()))) {
             return ResponseEntity.badRequest().body(new MessageResponse("Пользователя не существует!"));

@@ -8,6 +8,7 @@ import com.example.TableTime.adapter.web.user.dto.reserval.ReservalForm;
 import com.example.TableTime.adapter.web.user.dto.reserval.ReservalRequest;
 import com.example.TableTime.adapter.web.user.dto.reserval.UserReservalForm;
 import com.example.TableTime.adapter.web.user.dto.review.ReviewForm;
+import com.example.TableTime.config.jwt.JwtService;
 import com.example.TableTime.domain.user.UserEntity;
 import com.example.TableTime.service.ReservalService;
 import com.example.TableTime.service.RestaurantService;
@@ -38,6 +39,7 @@ public class UserController {
     private final UserService userService;
     private final ReviewService reviewService;
     private final RestaurantService restaurantService;
+    private final JwtService jwtService;
 
     @PostMapping("/freeTable/{id}")
     public ResponseEntity<?> listFreeTable(@PathVariable Long id, @RequestBody ReservalForm form) throws ParseException {
@@ -77,7 +79,7 @@ public class UserController {
             return ResponseEntity.badRequest().body(new MessageResponse("Такой email уже существует!"));
         }
         userService.updateUser(user, accountUpdate);
-        return ResponseEntity.ok().body(new MessageResponse("Данные изменены!"));
+        return ResponseEntity.ok().body(new UpdateToken(jwtService.generateToken(user)));
     }
 
     @DeleteMapping("/cancelReserval/{id}")

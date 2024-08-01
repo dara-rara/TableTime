@@ -121,12 +121,18 @@ public class UserService implements UserDetailsService{
                 user.getEmail(), user.getPhone(), dictReserval);
     }
 
-    public void updateUser (UserEntity user, AccountUpdate account) {
+    public void updateUser(UserEntity user, AccountUpdate account) {
         user.setUsername(account.getUsername());
         user.setRealname(account.getRealname());
         user.setPhone(account.getPhone());
         user.setEmail(account.getEmail());
         userRepository.save(user);
+    }
+
+    public boolean checkEmailAndUsername(String username, String email) {
+        var user = userRepository.findByEmail(email).get();
+        if (user.getUsername().equals(username)) return true;
+        return false;
     }
 
     @Override

@@ -120,11 +120,11 @@ public class RestaurantService {
         return data;
     }
 
-    public void createRestaurant (UserEntity user){
-        //поменять ошибку
-        if (restaurantRepository.existsByUser(user))
-            throw new UsernameNotFoundException("Пользователь ужя является администратором ресторана");
+    public boolean checkAdminRest(UserEntity user) {
+        return restaurantRepository.existsByUser(user);
+    }
 
+    public void createRestaurant (UserEntity user){
         existTown("Город");
 
         var restaurant = new RestaurantEntity();

@@ -21,4 +21,6 @@ public interface ReviewRepository extends JpaRepository<ReviewEntity, Long> {
             "FROM Reviews r\n" +
             "WHERE r.id_rest = :id_rest", nativeQuery = true)
     Float findAvgGrade(@Param("id_rest")Long id_rest);
+
+    long deleteByRestaurant (RestaurantEntity restaurant);
 }

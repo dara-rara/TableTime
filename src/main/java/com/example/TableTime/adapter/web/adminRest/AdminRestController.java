@@ -4,6 +4,8 @@ import com.example.TableTime.adapter.web.adminRest.dto.*;
 import com.example.TableTime.adapter.web.adminRest.dto.promotion.FormPromotion;
 import com.example.TableTime.adapter.web.adminRest.dto.reserval.*;
 import com.example.TableTime.adapter.web.auth.dto.MessageResponse;
+import com.example.TableTime.adapter.web.user.dto.UpdateToken;
+import com.example.TableTime.config.jwt.JwtService;
 import com.example.TableTime.domain.user.UserEntity;
 import com.example.TableTime.service.*;
 import lombok.AccessLevel;
@@ -29,6 +31,7 @@ public class AdminRestController {
     private final ReservalService reservalService;
     private final UserService userService;
     private final PromotionService promotionService;
+    private final JwtService jwtService;
 
     @GetMapping("/restaurant")
     public ResponseEntity<?> getRestaurant(@AuthenticationPrincipal UserEntity user) {
@@ -80,6 +83,10 @@ public class AdminRestController {
 
     @PostMapping("/userUpdate")
     public ResponseEntity<?>  updateUser(@AuthenticationPrincipal UserEntity user, @RequestBody AccountRestUpdate accountRequest) {
+        if (accountRequest.getUsername().isEmpty() || accountRequest.getEmail().isEmpty()
+                || accountRequest.getPhone().isEmpty()) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Поля не могут быть пустыми!"));
+        }
         if (!user.getUsername().equals(accountRequest.getUsername())
                 && userService.nameExists(accountRequest.getUsername())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Такой логин уже существует!"));
@@ -89,7 +96,7 @@ public class AdminRestController {
             return ResponseEntity.badRequest().body(new MessageResponse("Такой email уже существует!"));
         }
         adminRestService.updateUser(user, accountRequest);
-        return ResponseEntity.ok(new MessageResponse("Данные изменены!"));
+        return ResponseEntity.ok(new UpdateToken(jwtService.generateToken(user)));
     }
 
     @PostMapping("/getReservals")

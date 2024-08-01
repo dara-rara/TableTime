@@ -29,22 +29,36 @@ public class AdminAppController {
     private final UserService userService;
     private final RestaurantService restaurantService;
 
-    //нужен запрос на удаленеи
-
     @PostMapping("/createRestaurant")
     public ResponseEntity<?> createRestaurant(@RequestBody UserRequest user) {
-        if (!userService.emailExists(user.email())) {
+        if (!userService.emailExists(user.email()) || (userService.emailExists(user.email()) &&
+                !userService.checkEmailAndUsername(user.username(), user.email()))) {
             return ResponseEntity.badRequest().body(new MessageResponse("Пользователя не существует!"));
         }
-        restaurantService.createRestaurant(adminAppService.changeRole(userService
-                                .getByEmail(user.email()), Role.ADMIN_REST));
-
+        var userRest = userService.getByEmail(user.email());
+        if (restaurantService.checkAdminRest(userRest))
+            return ResponseEntity.badRequest().body(new MessageResponse("Пользователь уже администратор ресторана!"));
+        restaurantService.createRestaurant(adminAppService.changeRole(userRest, Role.ADMIN_REST));
         return ResponseEntity.ok(new MessageResponse("Ресторан создан!"));
     }
 
     @GetMapping("/getRoles")
     public RoleList getRoles() {
         return adminAppService.getRole();
+    }
+
+    @DeleteMapping("/deleteRestaurant")
+    public ResponseEntity<?>  cancelReservalRest(@RequestBody UserRequest user) {
+        if (!userService.emailExists(user.email()) || (userService.emailExists(user.email()) &&
+                !userService.checkEmailAndUsername(user.username(), user.email()))) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Пользователя не существует!"));
+        }
+
+        if (adminAppService.deleteRestaurant(userService.getByEmail(user.email()))) {
+            adminAppService.changeRole(userService.getByEmail(user.email()), Role.USER);
+            return ResponseEntity.ok().body(new MessageResponse("Изменения сохранены!"));
+        }
+        return ResponseEntity.badRequest().body(new MessageResponse("Пользователь не администратор ресторана!"));
     }
 
 }

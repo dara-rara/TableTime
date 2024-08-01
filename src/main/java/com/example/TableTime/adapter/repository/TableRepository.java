@@ -31,4 +31,6 @@ public interface TableRepository extends JpaRepository<TableEntity,Long> {
     List<Integer> findByNotReservalTable(@Param("id_rest")Long id_rest, @Param("date") Date date,
                                          @Param("time1") Date time1, @Param("time2") Date time2);
 
+    long deleteByRestaurant (RestaurantEntity restaurant);
+
 }

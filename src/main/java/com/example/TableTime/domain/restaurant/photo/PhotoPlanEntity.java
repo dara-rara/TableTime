@@ -1,6 +1,5 @@
 package com.example.TableTime.domain.restaurant.photo;
 
-import com.example.TableTime.domain.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

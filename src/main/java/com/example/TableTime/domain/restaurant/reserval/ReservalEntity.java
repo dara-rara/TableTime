@@ -1,5 +1,6 @@
-package com.example.TableTime.domain.restaurant;
+package com.example.TableTime.domain.restaurant.reserval;
 
+import com.example.TableTime.domain.restaurant.RestaurantEntity;
 import com.example.TableTime.domain.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -10,7 +11,6 @@ import lombok.experimental.FieldNameConstants;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -18,7 +18,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Setter
 @Getter
 @Entity
-@Table(name = "Reservals")
+@Table(name = "ReservalsRest")
 @FieldNameConstants
 @NoArgsConstructor
 public class ReservalEntity {
@@ -44,18 +44,19 @@ public class ReservalEntity {
 
     @Temporal(TemporalType.TIME)
     @Column(name = "time_start", nullable = false)
-    private Date timeStart;
+    private LocalTime timeStart;
 
     @Temporal(TemporalType.TIME)
     @Column(name = "time_end", nullable = false)
-    private Date timeEnd;
+    private LocalTime timeEnd;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "date", nullable = false)
-    private Date date;
+    private LocalDate date;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "state", nullable = false)
-    private String state;
+    private State state;
 
     @Column(name = "message", nullable = true)
     private String message;

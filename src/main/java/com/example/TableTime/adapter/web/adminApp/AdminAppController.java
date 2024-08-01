@@ -2,6 +2,7 @@ package com.example.TableTime.adapter.web.adminApp;
 
 import com.example.TableTime.adapter.web.adminApp.dto.RoleList;
 import com.example.TableTime.adapter.web.adminApp.dto.UserRequest;
+import com.example.TableTime.adapter.web.auth.dto.MessageResponse;
 import com.example.TableTime.domain.user.Role;
 import com.example.TableTime.service.AdminAppService;
 import com.example.TableTime.service.RestaurantService;
@@ -28,12 +29,17 @@ public class AdminAppController {
     private final UserService userService;
     private final RestaurantService restaurantService;
 
+    //нужен запрос на удаленеи
+
     @PostMapping("/createRestaurant")
-    public ResponseEntity createRestaurant(@RequestBody UserRequest user) {
+    public ResponseEntity<?> createRestaurant(@RequestBody UserRequest user) {
+        if (!userService.emailExists(user.email())) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Пользователя не существует!"));
+        }
         restaurantService.createRestaurant(adminAppService.changeRole(userService
                                 .getByEmail(user.email()), Role.ADMIN_REST));
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.ok(new MessageResponse("Ресторан создан!"));
     }
 
     @GetMapping("/getRoles")

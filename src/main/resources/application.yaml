@@ -10,9 +10,9 @@ spring:
 #    password: qaz%123%
 #    driver-class-name: org.postgresql.Driver
 #    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    url: jdbc:postgresql://${PROD_DB_HOST}:${PROD_DB_PORT}/${PROD_DB_NAME}
-    username: ${PROD_DB_USERNAME}
-    password: ${PROD_DB_PASSWORD}
+    url: jdbc:postgresql://${PROD_DB_HOST:localhost}:${PROD_DB_PORT:5432}/${PROD_DB_NAME:TableTime}
+    username: ${PROD_DB_USERNAME:postgres}
+    password: ${PROD_DB_PASSWORD:qaz%123%}
     driver-class-name: org.postgresql.Driver
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 #  PROD_DB_HOST=monorail.proxy.rlwy.net
@@ -21,12 +21,14 @@ spring:
 #  PROD_DB_USERNAME=postgres
 #  PROD_DB_PASSWORD=tIZHnOmjCFnZAYOXeNodNWbgmQJuxHSL
 
+#  PROD_DB_HOST=monorail.proxy.rlwy.net
+#  PROD_DB_PORT=44728
+#  PROD_DB_NAME=railway
+#  PROD_DB_USERNAME=postgres
+#  PROD_DB_PASSWORD=YKPmHEUwweShnkvERNLDRBQVuQUfcVvI
+
 
 token:
   signing:
     key: 53A73E5F1C4E0A2D3B5F2D784E6A1B423D6F247D1F6E5C3A596D635A75327855
     time: 86400000
-
-server:
-  port:
-    8080

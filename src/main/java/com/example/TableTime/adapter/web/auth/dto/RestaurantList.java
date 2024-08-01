@@ -12,4 +12,5 @@ public class RestaurantList {
     private String address;
     private String phone;
     private String photo;
+    private Integer grade;
 }

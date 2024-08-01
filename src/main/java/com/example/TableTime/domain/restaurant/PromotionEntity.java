@@ -7,30 +7,31 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.FieldNameConstants;
 
-import java.util.List;
-
 import static lombok.AccessLevel.PRIVATE;
 
 @FieldDefaults(level = PRIVATE)
 @Setter
 @Getter
 @Entity
-@Table(name = "Tables")
+@Table(name = "Promotion")
 @FieldNameConstants
 @NoArgsConstructor
-public class TableEntity {
-
+public class PromotionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_tab;
+    private Long id_prom;
 
-    @Column(name = "number", nullable = false)
-    private Integer number;
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_rest", nullable = false)
+    @JoinColumn(name = "id_rest")
     private RestaurantEntity restaurant;
 
-//    @OneToMany(mappedBy = "table", cascade = CascadeType.REMOVE)
-//    private List<TableReservalRelation> tables;
+    @Column(name = "description", nullable = false, length = 2000)
+    private String description;
+
+    @Lob
+    @Column(name = "photo", nullable = true)
+    private String photo;
 }
